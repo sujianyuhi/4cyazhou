@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计说明 - 崖城风骨</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-progress"></div>
+
+    <!-- 全局导航 -->
+    <nav class="navbar scrolled">
+        <div class="nav-brand">
+            <span class="nav-logo">崖城风骨</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html" class="nav-link">首页</a></li>
+            <li><a href="page-shape.html" class="nav-link">形·古城</a></li>
+            <li><a href="page-technology.html" class="nav-link">技·营造</a></li>
+            <li><a href="page-people.html" class="nav-link">人·人文</a></li>
+            <li><a href="page-spirit.html" class="nav-link">魂·传承</a></li>
+            <li><a href="page-intro.html" class="nav-link active">设计说明</a></li>
+        </ul>
+        <button class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- 全局控件 -->
+    <div class="global-controls">
+        <button id="assistant-toggle" class="control-btn" title="智能助手">
+            <span>🤖</span>
+        </button>
+        <button id="audio-btn" class="control-btn" title="背景音乐">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+        </button>
+        <button id="font-btn" class="control-btn" title="字体大小">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+            </svg>
+        </button>
+        <button id="top-btn" class="control-btn" title="回到顶部">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- 智能信息查询助手 -->
+    <div class="assistant-float" id="assistant-float">
+        <div class="assistant-header" id="assistant-header">
+            <div class="assistant-title">
+                <span class="assistant-icon">🤖</span>
+                <span>崖城智查</span>
+            </div>
+            <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-min" title="最小化">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="12" x2="18" y2="12"/>
+                    </svg>
+                </button>
+                <button class="assistant-btn" id="assistant-close" title="关闭">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="assistant-content">
+            <div class="assistant-search">
+                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
+                <button id="assistant-search-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="assistant-categories">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="history">历史沿革</button>
+                <button class="category-btn" data-category="officials">官员信息</button>
+                <button class="category-btn" data-category="architecture">建筑布局</button>
+                <button class="category-btn" data-category="literature">历史文献</button>
+            </div>
+            
+            <div class="assistant-results" id="assistant-results">
+                <div class="results-loading" id="results-loading">
+                    <div class="loading-spinner"></div>
+                    <span>正在查询中...</span>
+                </div>
+                <div class="results-empty" id="results-empty">
+                    <span>暂无搜索结果，请输入关键词查询</span>
+                </div>
+                <div class="results-list" id="results-list"></div>
+            </div>
+            
+            <div class="assistant-pagination" id="assistant-pagination"></div>
+        </div>
+        
+        <div class="assistant-resize" id="assistant-resize"></div>
+    </div>
+
+    <section class="page-hero" style="height: 40vh; min-height: 300px;">
+        <div class="page-hero-bg">
+            <img src="../images/content/city-plan.jpg" alt="设计说明">
+        </div>
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <h1 class="page-title">设计说明</h1>
+            <p class="page-quote">作品全维度说明与评审依据</p>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">作品基本信息</h2>
+                <div class="intro-content">
+                    <div class="info-item">
+                        <span class="info-label">作品名称</span>
+                        <span class="info-value">崖城风骨——崖州古城建筑文化数字图鉴</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">参赛赛道</span>
+                        <span class="info-value">信息可视化·交互信息设计</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">参赛主题</span>
+                        <span class="info-value">中国古代建筑文化——弘扬中华优秀古建筑文明和文化传承</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">作品定位</span>
+                        <span class="info-value">以数字交互技术活化崖州古城建筑文化遗产，弘扬中华优秀古建筑文明与工匠精神</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">设计理念</h2>
+                <div class="intro-content">
+                    <p>本作品以「从物到魂」四层递进叙事为核心，通过数字交互技术活化崖州古城建筑文化遗产，完整呈现中华传统建筑文明在南疆的传承与发展。</p>
+                    <p><strong>第一层「形」</strong>：古城形制——中华传统营城理念的南疆实践</p>
+                    <p><strong>第二层「技」</strong>：营造之技——中华工匠智慧的实物见证</p>
+                    <p><strong>第三层「人」</strong>：人文之脉——人与建筑的千年共生</p>
+                    <p><strong>第四层「魂」</strong>：风骨之承——中华建筑文明的精神内核</p>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">应用场景</h2>
+                <div class="intro-content">
+                    <div class="scenario-item">
+                        <h4>① 教育教学场景</h4>
+                        <p>高校/中小学建筑史、传统文化课程的教学交互工具，研学教育的数字科普资源。</p>
+                    </div>
+                    <div class="scenario-item">
+                        <h4>② 展陈传播场景</h4>
+                        <p>博物馆、文旅场馆、崖州古城景区的数字展陈交互内容，线上文博传播的数字载体。</p>
+                    </div>
+                    <div class="scenario-item">
+                        <h4>③ 大众科普场景</h4>
+                        <p>面向大众的中华古建筑文化科普平台，提升文化自信的数字内容产品。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">功能说明</h2>
+                <div class="intro-content">
+                    <p><strong>首页</strong>：作品迎宾页，四层叙事入口引导</p>
+                    <p><strong>形·古城之形</strong>：古城形制演变、选址智慧、四门格局</p>
+                    <p><strong>技·营造之技</strong>：传统营造技艺、水利工程、材料体系</p>
+                    <p><strong>人·人文之脉</strong>：贬官文化、民居家族、人文传承</p>
+                    <p><strong>魂·风骨之承</strong>：四层叙事闭环、核心精神、文化传承</p>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">技术说明</h2>
+                <div class="intro-content">
+                    <p><strong>技术栈</strong>：原生HTML5 + CSS3 + JavaScript</p>
+                    <p><strong>响应式设计</strong>：完美适配桌面端、平板、触控大屏</p>
+                    <p><strong>交互设计</strong>：时间轴切换、Canvas动画、弹窗详情</p>
+                    <p><strong>动效设计</strong>：滚动触发动画、粒子效果、视差滚动</p>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">参考文献</h2>
+                <div class="intro-content">
+                    <ul class="ref-list">
+                        <li>《崖州志》（点校本）</li>
+                        <li>《何以崖州》</li>
+                        <li>《琼台志》</li>
+                        <li>《海南古建筑》</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="intro-section scroll-reveal">
+                <h2 class="intro-title">版权声明</h2>
+                <div class="intro-content">
+                    <p>本作品为2026年全国大学生计算机设计大赛参赛作品，所有内容均为原创设计。</p>
+                    <p>作品中的图片素材均为AI生成或公共领域资源，无版权风险。</p>
+                    <p>所有史实内容均基于《崖州志》等权威史料，确保内容准确性。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>崖城风骨</h4>
+                <p>崖州古城建筑文化数字图鉴，以数字交互技术活化崖州古城建筑文化遗产，弘扬中华优秀古建筑文明与工匠精神。</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速导航</h4>
+                <ul>
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="./page-shape.html">形·古城之形</a></li>
+                    <li><a href="./page-technology.html">技·营造之技</a></li>
+                    <li><a href="./page-people.html">人·人文之脉</a></li>
+                    <li><a href="./page-spirit.html">魂·风骨之承</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>参考文献</h4>
+                <ul>
+                    <li>《崖州志》（点校本）</li>
+                    <li>《何以崖州》</li>
+                    <li>《琼台志》</li>
+                    <li>《海南古建筑》</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>本作品为2026年全国大学生计算机设计大赛参赛作品 | 信息可视化·交互信息设计赛道</p>
+            <p>内容聚焦1911年以前崖州古城建筑文化，符合大赛主题规范</p>
+        </div>
+    </footer>
+
+    <script src="../js/global.js"></script>
+</body>
+</html>

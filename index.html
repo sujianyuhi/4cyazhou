@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="崖城风骨——崖州古城建筑文化数字图鉴，全国大学生计算机设计大赛交互信息设计作品">
+    <title>崖城风骨——崖州古城建筑文化数字图鉴</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 页面进度条 -->
+    <div class="page-progress"></div>
+
+    <!-- 引导蒙层 -->
+    <div class="guide-overlay">
+        <div class="guide-content">
+            <div class="guide-logo">崖城风骨</div>
+            <h3>欢迎使用崖州古城建筑文化数字图鉴</h3>
+            <p class="guide-subtitle">本作品采用「从物到魂」四层叙事结构</p>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <span class="step-num">1</span>
+                    <span>滚动浏览各模块内容</span>
+                </div>
+                <div class="guide-step">
+                    <span class="step-num">2</span>
+                    <span>点击交互元素查看详情</span>
+                </div>
+                <div class="guide-step">
+                    <span class="step-num">3</span>
+                    <span>支持触控与鼠标双操作</span>
+                </div>
+            </div>
+            <button id="guide-close" class="btn-primary">开启图鉴</button>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 全局导航 -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-logo">崖城风骨</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html" class="nav-link active">首页</a></li>
+            <li><a href="pages/page-shape.html" class="nav-link">形·古城</a></li>
+            <li><a href="pages/page-technology.html" class="nav-link">技·营造</a></li>
+            <li><a href="pages/page-people.html" class="nav-link">人·人文</a></li>
+            <li><a href="pages/page-spirit.html" class="nav-link">魂·传承</a></li>
+            <li><a href="pages/page-intro.html" class="nav-link">设计说明</a></li>
+        </ul>
+        <button class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- 全局控件 -->
+    <!-- 智能信息查询助手 -->
+    <div class="assistant-float" id="assistant-float">
+        <div class="assistant-header" id="assistant-header">
+            <div class="assistant-title">
+                <span class="assistant-icon">🤖</span>
+                <span>崖城智查</span>
+            </div>
+            <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-min" title="最小化">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="12" x2="18" y2="12"/>
+                    </svg>
+                </button>
+                <button class="assistant-btn" id="assistant-close" title="关闭">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="assistant-content">
+            <div class="assistant-search">
+                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
+                <button id="assistant-search-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="assistant-categories">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="history">历史沿革</button>
+                <button class="category-btn" data-category="officials">官员信息</button>
+                <button class="category-btn" data-category="architecture">建筑布局</button>
+                <button class="category-btn" data-category="literature">历史文献</button>
+            </div>
+            
+            <div class="assistant-results" id="assistant-results">
+                <div class="results-loading" id="results-loading">
+                    <div class="loading-spinner"></div>
+                    <span>正在查询中...</span>
+                </div>
+                <div class="results-empty" id="results-empty">
+                    <span>暂无搜索结果，请输入关键词查询</span>
+                </div>
+                <div class="results-list" id="results-list"></div>
+            </div>
+            
+            <div class="assistant-pagination" id="assistant-pagination"></div>
+        </div>
+        
+        <div class="assistant-resize" id="assistant-resize"></div>
+    </div>
+    
+    <div class="global-controls">
+        <button id="assistant-toggle" class="control-btn" title="智能助手">
+            <span>🤖</span>
+        </button>
+        <button id="audio-btn" class="control-btn" title="背景音乐">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+        </button>
+        <button id="font-btn" class="control-btn" title="字体大小">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+            </svg>
+        </button>
+        <button id="top-btn" class="control-btn" title="回到顶部">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- 首屏KV -->
+    <section class="hero">
+        <div class="hero-bg">
+            <img src="images/bg/hero-bg.jpg" alt="崖州古城">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-particles" id="hero-particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">全国大学生计算机设计大赛参赛作品</div>
+            <h1 class="hero-title">
+                <span class="title-main">崖城风骨</span>
+                <span class="title-sub">——崖州古城建筑文化数字图鉴</span>
+            </h1>
+            <p class="hero-desc">中华传统营城理念的南疆实践</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num">1300</span>
+                    <span class="stat-label">年历史</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">4</span>
+                    <span class="stat-label">座城门</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">6</span>
+                    <span class="stat-label">大维度</span>
+                </div>
+            </div>
+            <button id="start-btn" class="btn-start">
+                <span>开启崖州风骨之旅</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </button>
+        </div>
+        <div class="scroll-hint">
+            <span>向下滚动探索</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- 叙事开篇 -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="intro-content scroll-reveal">
+                <div class="intro-text">
+                    <h2 class="section-title">隋唐设治，文脉千年</h2>
+                    <p class="intro-quote">「南海之滨的中华营城范本，活的建筑文化博物馆」</p>
+                    <p class="intro-desc">崖州古城，始建于隋代，历经唐宋元明清各代修缮扩建，形成"负山襟海"的独特格局。古城四门对称，中轴线贯穿南北，完整体现中华传统营城礼制，是南疆海防重镇与礼制城池的双重典范。</p>
+                    <div class="intro-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🏛️</span>
+                            <span>中华营城范本</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📜</span>
+                            <span>千年文脉传承</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🌊</span>
+                            <span>南疆海防重镇</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-image">
+                    <img src="images/content/city-plan.jpg" alt="崖州古城平面图">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 四层叙事入口 -->
+    <section class="narrative-section" id="narrative">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">核心叙事</span>
+                <h2 class="section-title">从物到魂，四层递进</h2>
+                <p class="section-subtitle">探索崖州古城建筑文化的完整脉络</p>
+            </div>
+            <div class="narrative-cards">
+                <a href="pages/page-shape.html" class="narrative-card scroll-reveal delay-1">
+                    <div class="card-image">
+                        <img src="images/content/gate-south.jpg" alt="古城之形">
+                        <div class="card-overlay">
+                            <span class="card-num">01</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>形·古城之形</h3>
+                        <p>负山襟海，礼序南疆——中华营城思想的南海范本</p>
+                        <span class="card-link">探索古城形制 <span class="arrow">→</span></span>
+                    </div>
+                </a>
+                <a href="pages/page-technology.html" class="narrative-card scroll-reveal delay-2">
+                    <div class="card-image">
+                        <img src="images/content/wall-structure.jpg" alt="营造之技">
+                        <div class="card-overlay">
+                            <span class="card-num">02</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>技·营造之技</h3>
+                        <p>因材施艺，匠心南疆——中华工匠智慧的实物见证</p>
+                        <span class="card-link">探索营造技艺 <span class="arrow">→</span></span>
+                    </div>
+                </a>
+                <a href="pages/page-people.html" class="narrative-card scroll-reveal delay-3">
+                    <div class="card-image">
+                        <img src="images/content/oyster-window.jpg" alt="人文之脉">
+                        <div class="card-overlay">
+                            <span class="card-num">03</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>人·人文之脉</h3>
+                        <p>以建筑为媒，文脉传南疆——人与建筑的千年共生</p>
+                        <span class="card-link">探索人文脉络 <span class="arrow">→</span></span>
+                    </div>
+                </a>
+                <a href="pages/page-spirit.html" class="narrative-card scroll-reveal delay-4">
+                    <div class="card-image">
+                        <img src="images/content/guangji-bridge.jpg" alt="风骨之承">
+                        <div class="card-overlay">
+                            <span class="card-num">04</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>魂·风骨之承</h3>
+                        <p>千年崖城风骨，永续文脉传承——中华建筑文明的精神内核</p>
+                        <span class="card-link">探索传承之魂 <span class="arrow">→</span></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>崖城风骨</h4>
+                <p>崖州古城建筑文化数字图鉴，以数字交互技术活化崖州古城建筑文化遗产，弘扬中华优秀古建筑文明与工匠精神。</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速导航</h4>
+                <ul>
+                    <li><a href="pages/page-shape.html">形·古城之形</a></li>
+                    <li><a href="pages/page-technology.html">技·营造之技</a></li>
+                    <li><a href="pages/page-people.html">人·人文之脉</a></li>
+                    <li><a href="pages/page-spirit.html">魂·风骨之承</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>参考文献</h4>
+                <ul>
+                    <li>《崖州志》（点校本）</li>
+                    <li>《何以崖州》</li>
+                    <li>《琼台志》</li>
+                    <li>《海南古建筑》</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>本作品为2026年全国大学生计算机设计大赛参赛作品 | 信息可视化·交互信息设计赛道</p>
+            <p>内容聚焦1911年以前崖州古城建筑文化，符合大赛主题规范</p>
+        </div>
+    </footer>
+
+    <script src="js/global.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

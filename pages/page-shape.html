@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>形·古城之形 - 崖城风骨</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 页面进度条 -->
+    <div class="page-progress"></div>
+
+    <!-- 弹窗 -->
+    <div class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 全局导航 -->
+    <nav class="navbar scrolled">
+        <div class="nav-brand">
+            <span class="nav-logo">崖城风骨</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html" class="nav-link">首页</a></li>
+            <li><a href="page-shape.html" class="nav-link active">形·古城</a></li>
+            <li><a href="page-technology.html" class="nav-link">技·营造</a></li>
+            <li><a href="page-people.html" class="nav-link">人·人文</a></li>
+            <li><a href="page-spirit.html" class="nav-link">魂·传承</a></li>
+            <li><a href="page-intro.html" class="nav-link">设计说明</a></li>
+        </ul>
+        <button class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- 全局控件 -->
+    <div class="global-controls">
+        <button id="assistant-toggle" class="control-btn" title="智能助手">
+            <span>🤖</span>
+        </button>
+        <button id="audio-btn" class="control-btn" title="背景音乐">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+        </button>
+        <button id="font-btn" class="control-btn" title="字体大小">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+            </svg>
+        </button>
+        <button id="top-btn" class="control-btn" title="回到顶部">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- 智能信息查询助手 -->
+    <div class="assistant-float" id="assistant-float">
+        <div class="assistant-header" id="assistant-header">
+            <div class="assistant-title">
+                <span class="assistant-icon">🤖</span>
+                <span>崖城智查</span>
+            </div>
+            <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-min" title="最小化">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="12" x2="18" y2="12"/>
+                    </svg>
+                </button>
+                <button class="assistant-btn" id="assistant-close" title="关闭">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="assistant-content">
+            <div class="assistant-search">
+                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
+                <button id="assistant-search-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="assistant-categories">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="history">历史沿革</button>
+                <button class="category-btn" data-category="officials">官员信息</button>
+                <button class="category-btn" data-category="architecture">建筑布局</button>
+                <button class="category-btn" data-category="literature">历史文献</button>
+            </div>
+            
+            <div class="assistant-results" id="assistant-results">
+                <div class="results-loading" id="results-loading">
+                    <div class="loading-spinner"></div>
+                    <span>正在查询中...</span>
+                </div>
+                <div class="results-empty" id="results-empty">
+                    <span>暂无搜索结果，请输入关键词查询</span>
+                </div>
+                <div class="results-list" id="results-list"></div>
+            </div>
+            
+            <div class="assistant-pagination" id="assistant-pagination"></div>
+        </div>
+        
+        <div class="assistant-resize" id="assistant-resize"></div>
+    </div>
+
+    <!-- 页面头图 -->
+    <section class="page-hero">
+        <div class="page-hero-bg">
+            <img src="../images/content/city-plan.jpg" alt="古城之形">
+        </div>
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <span class="page-tag">第一层</span>
+            <h1 class="page-title">形·古城之形</h1>
+            <p class="page-quote">负山襟海，礼序南疆——中华营城思想的南海范本</p>
+        </div>
+    </section>
+
+    <!-- 时空营城演变 -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">时空营城</span>
+                <h2 class="section-title">古城形制演变</h2>
+                <p class="section-subtitle">从唐代土城到明清砖城的历史脉络</p>
+            </div>
+            
+            <div class="timeline-container scroll-reveal">
+                <div class="timeline">
+                    <div class="timeline-item active" data-era="tang">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-year">唐代</span>
+                            <span class="timeline-period">621-907</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item" data-era="song">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-year">南宋</span>
+                            <span class="timeline-period">1198</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item" data-era="ming">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-year">明代</span>
+                            <span class="timeline-period">1384</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item" data-era="qing">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-year">清代</span>
+                            <span class="timeline-period">1644-1911</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="era-display" id="era-display">
+                    <div class="era-image">
+                        <img src="../images/content/gate-south.jpg" alt="明代崖州城">
+                    </div>
+                    <div class="era-info">
+                        <h3>明代崖州城</h3>
+                        <p>明洪武十七年(1384年)扩建为千户所城，形成"城中有城"的防御体系。四门对称布局，中轴线贯穿南北，完整体现中华传统营城礼制。</p>
+                        <div class="era-features">
+                            <span class="feature-tag">千户所城</span>
+                            <span class="feature-tag">四门对称</span>
+                            <span class="feature-tag">子城罗城</span>
+                            <span class="feature-tag">中轴线</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 负山襟海选址智慧 -->
+    <section class="content-section bg-light">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">选址智慧</span>
+                <h2 class="section-title">负山襟海</h2>
+                <p class="section-subtitle">天人合一的营城哲学</p>
+            </div>
+            
+            <div class="site-wisdom scroll-reveal">
+                <div class="site-map">
+                    <svg viewBox="0 0 600 400" class="site-svg">
+                        <!-- 山 -->
+                        <path class="mountain" d="M50,300 L150,100 L250,300" />
+                        <text x="150" y="80" class="site-label">崖城山</text>
+                        
+                        <!-- 河 -->
+                        <path class="river" d="M300,350 Q400,320 550,350" />
+                        <text x="500" y="380" class="site-label">宁远河</text>
+                        
+                        <!-- 城 -->
+                        <rect class="city" x="200" y="200" width="200" height="150" rx="10" />
+                        <text x="300" y="280" class="site-label city-label">崖州古城</text>
+                        
+                        <!-- 连接线 -->
+                        <line class="connect-line" x1="150" y1="150" x2="250" y2="220" />
+                        <line class="connect-line" x1="450" y1="350" x2="350" y2="320" />
+                    </svg>
+                </div>
+                
+                <div class="site-features">
+                    <div class="site-card" data-feature="fengshui">
+                        <div class="site-icon">☯️</div>
+                        <h4>天人合一</h4>
+                        <p>山环水抱的传统风水理念，人与自然的和谐共生</p>
+                    </div>
+                    <div class="site-card" data-feature="defense">
+                        <div class="site-icon">🛡️</div>
+                        <h4>军事防御</h4>
+                        <p>依山傍河的天然屏障，抵御外敌与海盗</p>
+                    </div>
+                    <div class="site-card" data-feature="livelihood">
+                        <div class="site-icon">🌊</div>
+                        <h4>民生功能</h4>
+                        <p>宁远河的水运交通、灌溉供水、城市排水功能</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 四门对称礼制格局 -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">礼制格局</span>
+                <h2 class="section-title">四门对称</h2>
+                <p class="section-subtitle">中华礼制文化在南疆的完整落地</p>
+            </div>
+            
+            <div class="gates-grid scroll-reveal">
+                <div class="gate-card" data-gate="south">
+                    <div class="gate-image">
+                        <img src="../images/content/gate-south.jpg" alt="南门文明门">
+                    </div>
+                    <div class="gate-info">
+                        <h4>南门·文明门</h4>
+                        <p>古城正门，面向宁远河，是进出城的主要通道</p>
+                    </div>
+                </div>
+                <div class="gate-card" data-gate="east">
+                    <div class="gate-image">
+                        <img src="../images/content/gate-east.jpg" alt="东门朝阳门">
+                    </div>
+                    <div class="gate-info">
+                        <h4>东门·朝阳门</h4>
+                        <p>面向东方，迎接朝阳，通往东部的重要门户</p>
+                    </div>
+                </div>
+                <div class="gate-card" data-gate="west">
+                    <div class="gate-image">
+                        <img src="../images/content/gate-south.jpg" alt="西门镇海门">
+                    </div>
+                    <div class="gate-info">
+                        <h4>西门·镇海门</h4>
+                        <p>面向大海，寓意镇服海疆，体现海防功能</p>
+                    </div>
+                </div>
+                <div class="gate-card" data-gate="north">
+                    <div class="gate-image">
+                        <img src="../images/content/gate-east.jpg" alt="北门拱辰门">
+                    </div>
+                    <div class="gate-info">
+                        <h4>北门·拱辰门</h4>
+                        <p>背靠崖城山，清代改为凝秀门，古城北门屏障</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>崖城风骨</h4>
+                <p>崖州古城建筑文化数字图鉴，以数字交互技术活化崖州古城建筑文化遗产，弘扬中华优秀古建筑文明与工匠精神。</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速导航</h4>
+                <ul>
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="./page-technology.html">技·营造之技</a></li>
+                    <li><a href="./page-people.html">人·人文之脉</a></li>
+                    <li><a href="./page-spirit.html">魂·风骨之承</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>参考文献</h4>
+                <ul>
+                    <li>《崖州志》（点校本）</li>
+                    <li>《何以崖州》</li>
+                    <li>《琼台志》</li>
+                    <li>《海南古建筑》</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>本作品为2026年全国大学生计算机设计大赛参赛作品 | 信息可视化·交互信息设计赛道</p>
+            <p>内容聚焦1911年以前崖州古城建筑文化，符合大赛主题规范</p>
+        </div>
+    </footer>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/shape.js"></script>
+</body>
+</html>

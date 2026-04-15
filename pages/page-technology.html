@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技·营造之技 - 崖城风骨</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 页面进度条 -->
+    <div class="page-progress"></div>
+
+    <!-- 弹窗 -->
+    <div class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 全局导航 -->
+    <nav class="navbar scrolled">
+        <div class="nav-brand">
+            <span class="nav-logo">崖城风骨</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html" class="nav-link">首页</a></li>
+            <li><a href="page-shape.html" class="nav-link">形·古城</a></li>
+            <li><a href="page-technology.html" class="nav-link active">技·营造</a></li>
+            <li><a href="page-people.html" class="nav-link">人·人文</a></li>
+            <li><a href="page-spirit.html" class="nav-link">魂·传承</a></li>
+            <li><a href="page-intro.html" class="nav-link">设计说明</a></li>
+        </ul>
+        <button class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- 全局控件 -->
+    <div class="global-controls">
+        <button id="assistant-toggle" class="control-btn" title="智能助手">
+            <span>🤖</span>
+        </button>
+        <button id="audio-btn" class="control-btn" title="背景音乐">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+        </button>
+        <button id="font-btn" class="control-btn" title="字体大小">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+            </svg>
+        </button>
+        <button id="top-btn" class="control-btn" title="回到顶部">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- 智能信息查询助手 -->
+    <div class="assistant-float" id="assistant-float">
+        <div class="assistant-header" id="assistant-header">
+            <div class="assistant-title">
+                <span class="assistant-icon">🤖</span>
+                <span>崖城智查</span>
+            </div>
+            <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-min" title="最小化">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="6" y1="12" x2="18" y2="12"/>
+                    </svg>
+                </button>
+                <button class="assistant-btn" id="assistant-close" title="关闭">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="assistant-content">
+            <div class="assistant-search">
+                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
+                <button id="assistant-search-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="assistant-categories">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="history">历史沿革</button>
+                <button class="category-btn" data-category="officials">官员信息</button>
+                <button class="category-btn" data-category="architecture">建筑布局</button>
+                <button class="category-btn" data-category="literature">历史文献</button>
+            </div>
+            
+            <div class="assistant-results" id="assistant-results">
+                <div class="results-loading" id="results-loading">
+                    <div class="loading-spinner"></div>
+                    <span>正在查询中...</span>
+                </div>
+                <div class="results-empty" id="results-empty">
+                    <span>暂无搜索结果，请输入关键词查询</span>
+                </div>
+                <div class="results-list" id="results-list"></div>
+            </div>
+            
+            <div class="assistant-pagination" id="assistant-pagination"></div>
+        </div>
+        
+        <div class="assistant-resize" id="assistant-resize"></div>
+    </div>
+
+    <section class="page-hero">
+        <div class="page-hero-bg">
+            <img src="../images/content/wall-structure.jpg" alt="营造之技">
+        </div>
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <span class="page-tag">第二层</span>
+            <h1 class="page-title">技·营造之技</h1>
+            <p class="page-quote">因材施艺，匠心南疆——中华工匠智慧的实物见证</p>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">核心技艺</span>
+                <h2 class="section-title">传统营造技艺</h2>
+                <p class="section-subtitle">中原技艺与本地材料的完美融合</p>
+            </div>
+            
+            <div class="tech-tabs scroll-reveal">
+                <button class="tech-tab active" data-tech="wall">火山岩砌筑</button>
+                <button class="tech-tab" data-tech="window">蚝壳窗</button>
+                <button class="tech-tab" data-tech="bridge">广济桥</button>
+            </div>
+            
+            <div class="tech-display scroll-reveal">
+                <div class="tech-panel active" id="tech-wall">
+                    <div class="tech-image">
+                        <img src="../images/content/wall-structure.jpg" alt="火山岩砌筑">
+                    </div>
+                    <div class="tech-info">
+                        <h3>火山岩砌筑技艺</h3>
+                        <p>崖州古城城墙大量使用本地火山岩砌筑，形成独特的"灰黑城墙"景观。城砖刻有铭文戳记，体现"物勒工名"的工程质量制度。</p>
+                        <div class="tech-features">
+                            <span class="feature-tag">就地取材</span>
+                            <span class="feature-tag">物勒工名</span>
+                            <span class="feature-tag">夯土核心</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-panel" id="tech-window">
+                    <div class="tech-image">
+                        <img src="../images/content/oyster-window.jpg" alt="蚝壳窗">
+                    </div>
+                    <div class="tech-info">
+                        <h3>蚝壳窗热带适配</h3>
+                        <p>民居中巧用蚝壳薄片作为窗棂，这种材料既通风透光，又能有效抵御台风侵蚀，是适应热带气候的创新智慧。</p>
+                        <div class="tech-features">
+                            <span class="feature-tag">通风透光</span>
+                            <span class="feature-tag">抗台风</span>
+                            <span class="feature-tag">就地取材</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-panel" id="tech-bridge">
+                    <div class="tech-image">
+                        <img src="../images/content/guangji-bridge.jpg" alt="广济桥">
+                    </div>
+                    <div class="tech-info">
+                        <h3>石拱桥营造技艺</h3>
+                        <p>广济桥始建于明景泰年间，清康熙九年(1670年)重修为砖石桥。单孔拱券结构，长15米，宽4.5米，拱高4.76米，屹立三个半世纪。</p>
+                        <div class="tech-features">
+                            <span class="feature-tag">单孔拱券</span>
+                            <span class="feature-tag">驿道配套</span>
+                            <span class="feature-tag">灌渠相依</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section bg-light">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">水利工程</span>
+                <h2 class="section-title">古城水系网络</h2>
+                <p class="section-subtitle">宁远河-护城河-城内暗渠的完整水系</p>
+            </div>
+            
+            <div class="water-system scroll-reveal">
+                <div class="water-canvas-container">
+                    <canvas id="water-canvas" width="800" height="350"></canvas>
+                </div>
+                <div class="water-nodes">
+                    <div class="water-node" style="left: 10%; top: 25%;" data-node="ningyuan">
+                        <span class="node-dot"></span>
+                        <span class="node-label">宁远河</span>
+                    </div>
+                    <div class="water-node" style="left: 35%; top: 50%;" data-node="moat">
+                        <span class="node-dot"></span>
+                        <span class="node-label">护城河</span>
+                    </div>
+                    <div class="water-node" style="left: 60%; top: 35%;" data-node="guangou">
+                        <span class="node-dot"></span>
+                        <span class="node-label">官沟</span>
+                    </div>
+                    <div class="water-node" style="left: 85%; top: 60%;" data-node="field">
+                        <span class="node-dot"></span>
+                        <span class="node-label">灌溉农田</span>
+                    </div>
+                </div>
+                <div class="water-info" id="water-info">
+                    <h4>宁远河</h4>
+                    <p>崖州母亲河，发源于保亭毛感石林，流经崖州平原，为古城提供水源与灌溉。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>崖城风骨</h4>
+                <p>崖州古城建筑文化数字图鉴，以数字交互技术活化崖州古城建筑文化遗产，弘扬中华优秀古建筑文明与工匠精神。</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速导航</h4>
+                <ul>
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="./page-shape.html">形·古城之形</a></li>
+                    <li><a href="./page-people.html">人·人文之脉</a></li>
+                    <li><a href="./page-spirit.html">魂·风骨之承</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>参考文献</h4>
+                <ul>
+                    <li>《崖州志》（点校本）</li>
+                    <li>《何以崖州》</li>
+                    <li>《琼台志》</li>
+                    <li>《海南古建筑》</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>本作品为2026年全国大学生计算机设计大赛参赛作品 | 信息可视化·交互信息设计赛道</p>
+            <p>内容聚焦1911年以前崖州古城建筑文化，符合大赛主题规范</p>
+        </div>
+    </footer>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/technology.js"></script>
+</body>
+</html>
