@@ -1,0 +1,148 @@
+<!-- 交互式城门转盘组件 -->
+<section class="wheel-section" id="gate-wheel">
+    <div class="container">
+        <div class="section-header scroll-reveal">
+            <span class="section-tag">互动探索</span>
+            <h2 class="section-title">古城四门</h2>
+            <p class="section-subtitle">拖拽转盘探索崖州古城四门，感受中华礼制格局</p>
+        </div>
+        
+        <div class="wheel-container scroll-reveal">
+            <!-- 转盘区域 -->
+            <div class="wheel-wrapper">
+                <!-- 指针指示器 -->
+                <div class="wheel-pointer">
+                    <div class="pointer-triangle"></div>
+                    <div class="pointer-label">当前指向</div>
+                </div>
+                
+                <!-- 角度显示 -->
+                <div class="angle-display">
+                    <span class="angle-value">0°</span>
+                </div>
+                
+                <!-- 转盘主体 -->
+                <div class="wheel" id="wheel">
+                    <!-- 转盘背景 -->
+                    <div class="wheel-bg">
+                        <svg viewBox="0 0 400 400" class="wheel-svg">
+                            <!-- 外圈装饰 -->
+                            <circle cx="200" cy="200" r="195" fill="none" stroke="var(--color-gold)" stroke-width="2"/>
+                            <circle cx="200" cy="200" r="185" fill="none" stroke="var(--color-ochre)" stroke-width="1" stroke-dasharray="5,5"/>
+                            
+                            <!-- 刻度线 -->
+                            <g class="wheel-ticks">
+                                <!-- 主刻度 -->
+                                <line x1="200" y1="15" x2="200" y2="35" stroke="var(--color-ochre)" stroke-width="3"/>
+                                <line x1="385" y1="200" x2="365" y2="200" stroke="var(--color-ochre)" stroke-width="3"/>
+                                <line x1="200" y1="385" x2="200" y2="365" stroke="var(--color-ochre)" stroke-width="3"/>
+                                <line x1="15" y1="200" x2="35" y2="200" stroke="var(--color-ochre)" stroke-width="3"/>
+                                
+                                <!-- 次刻度 -->
+                                <line x1="330" y1="70" x2="315" y2="85" stroke="var(--color-gold)" stroke-width="2"/>
+                                <line x1="330" y1="330" x2="315" y2="315" stroke="var(--color-gold)" stroke-width="2"/>
+                                <line x1="70" y1="330" x2="85" y2="315" stroke="var(--color-gold)" stroke-width="2"/>
+                                <line x1="70" y1="70" x2="85" y2="85" stroke="var(--color-gold)" stroke-width="2"/>
+                            </g>
+                            
+                            <!-- 中心装饰 -->
+                            <circle cx="200" cy="200" r="60" fill="var(--color-paper)" stroke="var(--color-gold)" stroke-width="3"/>
+                            <circle cx="200" cy="200" r="50" fill="none" stroke="var(--color-ochre)" stroke-width="1"/>
+                            <text x="200" y="195" text-anchor="middle" font-family="var(--font-serif)" font-size="14" fill="var(--color-ochre)">崖州</text>
+                            <text x="200" y="215" text-anchor="middle" font-family="var(--font-serif)" font-size="12" fill="var(--color-stone)">古城</text>
+                        </svg>
+                    </div>
+                    
+                    <!-- 城门项目 - 均匀分布在转盘边缘 -->
+                    <div class="wheel-items">
+                        <!-- 南门 - 底部 (0度初始位置) -->
+                        <div class="wheel-item" data-gate="south" data-angle="0">
+                            <div class="item-marker">
+                                <div class="item-icon">🏛️</div>
+                                <div class="item-label">文明门</div>
+                                <div class="item-direction">南</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 东门 - 右侧 (90度) -->
+                        <div class="wheel-item" data-gate="east" data-angle="90">
+                            <div class="item-marker">
+                                <div class="item-icon">🌅</div>
+                                <div class="item-label">朝阳门</div>
+                                <div class="item-direction">东</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 北门 - 顶部 (180度) -->
+                        <div class="wheel-item" data-gate="north" data-angle="180">
+                            <div class="item-marker">
+                                <div class="item-icon">⛰️</div>
+                                <div class="item-label">拱辰门</div>
+                                <div class="item-direction">北</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 西门 - 左侧 (270度) -->
+                        <div class="wheel-item" data-gate="west" data-angle="270">
+                            <div class="item-marker">
+                                <div class="item-icon">🌊</div>
+                                <div class="item-label">镇海门</div>
+                                <div class="item-direction">西</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 拖拽提示 -->
+                    <div class="wheel-hint">
+                        <span class="hint-icon">👆</span>
+                        <span class="hint-text">拖拽旋转</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 信息面板 -->
+            <div class="info-panel" id="info-panel">
+                <div class="panel-header">
+                    <div class="panel-icon" id="panel-icon">🏛️</div>
+                    <div class="panel-title-group">
+                        <h3 class="panel-title" id="panel-title">南门·文明门</h3>
+                        <span class="panel-direction" id="panel-direction">面向南方</span>
+                    </div>
+                </div>
+                
+                <div class="panel-image">
+                    <img src="../images/content/gate-south.jpg" alt="南门" id="panel-image">
+                    <div class="image-overlay"></div>
+                </div>
+                
+                <div class="panel-content">
+                    <p class="panel-description" id="panel-description">
+                        南门名"文明"，是古城的正门，面向宁远河，是进出城的主要通道。现存城门楼为清代遗存，上书"文明门"三字，体现了崖州作为南疆文化中心的地位。
+                    </p>
+                    
+                    <div class="panel-features">
+                        <h4>建筑特色</h4>
+                        <ul class="feature-list" id="panel-features">
+                            <li>古城正门，规模宏大</li>
+                            <li>面向宁远河，水运便利</li>
+                            <li>清代遗存，保存完好</li>
+                            <li>门额题字，书法精美</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="panel-history">
+                        <h4>历史沿革</h4>
+                        <p id="panel-history">始建于南宋，明代扩建，清代重修。南门作为正门，是古城最繁忙的通道，也是官员进出、百姓交易的主要门户。</p>
+                    </div>
+                </div>
+                
+                <a href="#" class="panel-link" id="panel-link">
+                    <span>查看详细资料</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
