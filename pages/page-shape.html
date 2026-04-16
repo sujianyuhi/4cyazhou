@@ -22,6 +22,51 @@
         </div>
     </div>
 
+    <!-- 卷轴弹窗 -->
+    <div class="scroll-modal" id="scroll-modal">
+        <div class="scroll-backdrop"></div>
+        <div class="scroll-container">
+            <div class="scroll-roll left"></div>
+            <div class="scroll-roll right"></div>
+            <div class="scroll-content">
+                <button class="scroll-close" id="scroll-close">&times;</button>
+                <div class="scroll-body">
+                    <h3 class="scroll-title">风水格局契合</h3>
+                    <div class="scroll-section">
+                        <p class="scroll-intro">完全匹配传统风水理想格局</p>
+                        <div class="fengshui-grid">
+                            <div class="fengshui-item">
+                                <span class="fengshui-name">玄武垂头</span>
+                                <span class="fengshui-desc">靠山峙为靠</span>
+                            </div>
+                            <div class="fengshui-item">
+                                <span class="fengshui-name">朱雀翔舞</span>
+                                <span class="fengshui-desc">宁远河为水</span>
+                            </div>
+                            <div class="fengshui-item">
+                                <span class="fengshui-name">青龙蜿蜒</span>
+                                <span class="fengshui-desc">东南丘陵环拥</span>
+                            </div>
+                            <div class="fengshui-item">
+                                <span class="fengshui-name">白虎驯俯</span>
+                                <span class="fengshui-desc">西侧地势坦伏</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scroll-section">
+                        <h4 class="scroll-subtitle">古人评价</h4>
+                        <blockquote class="scroll-quote">
+                            <p>《崖州志》：州治枕其山，面临大海，东有河流通海，西有港汉环护 —— 诚为琼之要区也。</p>
+                        </blockquote>
+                        <blockquote class="scroll-quote">
+                            <p>清代董学曾诗碑记：面南山而负北岭，左溪右壑，风气完萃。</p>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 全局导航 -->
     <nav class="navbar scrolled">
         <div class="nav-brand">
@@ -66,14 +111,20 @@
         </button>
     </div>
     
-    <!-- 智能信息查询助手 -->
+    <!-- AI智能助手 -->
     <div class="assistant-float" id="assistant-float">
         <div class="assistant-header" id="assistant-header">
             <div class="assistant-title">
                 <span class="assistant-icon">🤖</span>
                 <span>崖城智查</span>
+                <span class="assistant-badge">AI</span>
             </div>
             <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-clear" title="清空对话">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                </button>
                 <button class="assistant-btn" id="assistant-min" title="最小化">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="6" y1="12" x2="18" y2="12"/>
@@ -88,37 +139,36 @@
             </div>
         </div>
         
-        <div class="assistant-content">
+        <div class="assistant-chat" id="assistant-chat">
+            <div class="chat-messages" id="chat-messages"></div>
+            
+            <div class="chat-loading" id="chat-loading" style="display: none;">
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span>AI思考中...</span>
+            </div>
+            
+            <div class="quick-questions" id="quick-questions">
+                <button class="quick-btn" data-question="崖州古城的历史起源是什么？">古城历史</button>
+                <button class="quick-btn" data-question="崖州古城有哪些著名历史人物？">历史人物</button>
+                <button class="quick-btn" data-question="崖州古城的四门分别是什么？">古城四门</button>
+                <button class="quick-btn" data-question="苏轼与崖州有什么渊源？">苏轼</button>
+            </div>
+        </div>
+        
+        <div class="assistant-input-area">
             <div class="assistant-search">
-                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
-                <button id="assistant-search-btn">
+                <input type="text" id="assistant-input" placeholder="输入您的问题，按Enter发送..." autocomplete="off" />
+                <button id="assistant-search-btn" title="发送">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                     </svg>
                 </button>
             </div>
-            
-            <div class="assistant-categories">
-                <button class="category-btn active" data-category="all">全部</button>
-                <button class="category-btn" data-category="history">历史沿革</button>
-                <button class="category-btn" data-category="officials">官员信息</button>
-                <button class="category-btn" data-category="architecture">建筑布局</button>
-                <button class="category-btn" data-category="literature">历史文献</button>
-            </div>
-            
-            <div class="assistant-results" id="assistant-results">
-                <div class="results-loading" id="results-loading">
-                    <div class="loading-spinner"></div>
-                    <span>正在查询中...</span>
-                </div>
-                <div class="results-empty" id="results-empty">
-                    <span>暂无搜索结果，请输入关键词查询</span>
-                </div>
-                <div class="results-list" id="results-list"></div>
-            </div>
-            
-            <div class="assistant-pagination" id="assistant-pagination"></div>
         </div>
         
         <div class="assistant-resize" id="assistant-resize"></div>
@@ -208,23 +258,7 @@
             
             <div class="site-wisdom scroll-reveal">
                 <div class="site-map">
-                    <svg viewBox="0 0 600 400" class="site-svg">
-                        <!-- 山 -->
-                        <path class="mountain" d="M50,300 L150,100 L250,300" />
-                        <text x="150" y="80" class="site-label">崖城山</text>
-                        
-                        <!-- 河 -->
-                        <path class="river" d="M300,350 Q400,320 550,350" />
-                        <text x="500" y="380" class="site-label">宁远河</text>
-                        
-                        <!-- 城 -->
-                        <rect class="city" x="200" y="200" width="200" height="150" rx="10" />
-                        <text x="300" y="280" class="site-label city-label">崖州古城</text>
-                        
-                        <!-- 连接线 -->
-                        <line class="connect-line" x1="150" y1="150" x2="250" y2="220" />
-                        <line class="connect-line" x1="450" y1="350" x2="350" y2="320" />
-                    </svg>
+                    <img src="../images/content/YaZhouAncientCity.png" alt="崖州古城风水格局" class="site-image">
                 </div>
                 
                 <div class="site-features">
@@ -366,6 +400,48 @@
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 建筑格局 -->
+    <section class="content-section bg-light">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">空间布局</span>
+                <h2 class="section-title">建筑格局</h2>
+                <p class="section-subtitle">三道、四隅、七街、八角</p>
+            </div>
+            
+            <div class="layout-container scroll-reveal">
+                <!-- 格局示意图 -->
+                <div class="layout-diagram">
+                    <img src="../images/content/ModernYazhouAncientCity.jpeg" alt="崖州古城格局示意图" class="layout-image">
+                </div>
+                
+                <!-- 格局特点说明 -->
+                <div class="layout-features">
+                    <div class="layout-card" data-layout="hierarchy">
+                        <div class="layout-icon">🏛️</div>
+                        <h4>罗城子城</h4>
+                        <p>明代扩建形成"罗城包子城"的双重城郭体系，子城为行政核心，罗城容纳民居商业</p>
+                    </div>
+                    <div class="layout-card" data-layout="axis">
+                        <div class="layout-icon">⬌</div>
+                        <h4>中轴对称</h4>
+                        <p>以南北为中轴线，州署、学宫、城隍庙等重要建筑沿轴线分布，体现中华传统礼制</p>
+                    </div>
+                    <div class="layout-card" data-layout="street">
+                        <div class="layout-icon">➕</div>
+                        <h4>十字街格局</h4>
+                        <p>城内主街呈十字形交汇于中心，连接四门，是古城交通和商业活动的核心枢纽</p>
+                    </div>
+                    <div class="layout-card" data-layout="fang">
+                        <div class="layout-icon">⊞</div>
+                        <h4>厢坊布局</h4>
+                        <p>城内划分东厢、西厢等居住区域，街巷纵横有序，形成"街-巷-院"三级空间体系</p>
+                    </div>
                 </div>
             </div>
         </div>

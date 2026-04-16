@@ -412,21 +412,7 @@ const ScrollReveal = {
     }
 };
 
-// ===== 初始化 =====
-document.addEventListener('DOMContentLoaded', () => {
-    Navbar.init();
-    PageProgress.init();
-    GlobalControls.init();
-    Modal.init();
-    GuideOverlay.init();
-    ScrollReveal.init();
-    Assistant.init();
-
-    console.log('%c崖城风骨——崖州古城建筑文化数字图鉴', 'color: #8B4513; font-size: 18px; font-weight: bold;');
-    console.log('%c全国大学生计算机设计大赛参赛作品', 'color: #2F5D7A; font-size: 14px;');
-});
-
-// ===== 智能信息查询助手 =====
+// ===== AI智能助手（集成Deepseek API）=====
 const Assistant = {
     float: null,
     header: null,
@@ -435,11 +421,10 @@ const Assistant = {
     closeBtn: null,
     minBtn: null,
     toggleBtn: null,
-    resultsContainer: null,
-    resultsList: null,
+    chatContainer: null,
+    messagesContainer: null,
     loading: null,
-    empty: null,
-    pagination: null,
+    quickQuestions: null,
     
     isDragging: false,
     dragStartX: 0,
@@ -447,13 +432,12 @@ const Assistant = {
     floatStartX: 0,
     floatStartY: 0,
     
-    currentCategory: 'all',
-    currentPage: 1,
-    itemsPerPage: 5,
-    searchKeyword: '',
-    searchHistory: [],
+    conversationHistory: [],
+    maxHistoryLength: 10,
+    isTyping: false,
     
-    data: {
+    // 崖州古城知识库（作为备用）
+    knowledgeBase: {
         history: [
             {
                 id: 1,
@@ -473,16 +457,6 @@ const Assistant = {
                 detail: {
                     significance: ['海上丝绸之路的重要驿站', '中原文化传入海南的桥头堡', '贬官文化的重要发源地', '海南历史文化的重要象征'],
                     description: '崖州古城在历史上曾是海南岛的政治中心，许多著名文人墨客如李德裕、苏轼、赵鼎等都曾在此留下足迹，形成了独特的贬官文化。'
-                }
-            },
-            {
-                id: 3,
-                title: '崖州古城的近代变迁',
-                category: 'history',
-                summary: '近代以来，崖州古城经历了多次战争与变革，城墙逐渐损毁，但城内的历史建筑和文化传统得以保留。',
-                detail: {
-                    events: ['1939年：日军侵占崖州', '1945年：抗日战争胜利', '1950年：海南岛解放', '20世纪80年代：开始文物保护'],
-                    description: '尽管经历了岁月的沧桑，崖州古城依然保留着丰富的历史遗存。如今，古城的修复与保护工作正在有序进行，致力于重现昔日的辉煌。'
                 }
             }
         ],
@@ -616,17 +590,16 @@ const Assistant = {
         this.closeBtn = document.getElementById('assistant-close');
         this.minBtn = document.getElementById('assistant-min');
         this.toggleBtn = document.getElementById('assistant-toggle');
-        this.resultsContainer = document.getElementById('assistant-results');
-        this.resultsList = document.getElementById('results-list');
-        this.loading = document.getElementById('results-loading');
-        this.empty = document.getElementById('results-empty');
-        this.pagination = document.getElementById('assistant-pagination');
+        this.chatContainer = document.getElementById('assistant-chat');
+        this.messagesContainer = document.getElementById('chat-messages');
+        this.loading = document.getElementById('chat-loading');
+        this.quickQuestions = document.getElementById('quick-questions');
         
         if (!this.float) return;
         
+        this.loadConversationHistory();
         this.bindEvents();
-        this.loadSearchHistory();
-        this.renderResults();
+        this.renderWelcomeMessage();
     },
     
     bindEvents() {
@@ -635,23 +608,42 @@ const Assistant = {
         this.minBtn.addEventListener('click', () => this.minimize());
         this.toggleBtn.addEventListener('click', () => this.toggle());
         
-        this.searchBtn.addEventListener('click', () => this.search());
+        // 清空对话按钮
+        const clearBtn = document.getElementById('assistant-clear');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearConversation());
+        }
+        
+        this.searchBtn.addEventListener('click', () => this.sendMessage());
         this.input.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') this.search();
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
+            }
         });
         
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.currentCategory = e.target.dataset.category;
-                this.currentPage = 1;
-                this.renderResults();
+        // 快捷问题按钮
+        if (this.quickQuestions) {
+            this.quickQuestions.addEventListener('click', (e) => {
+                if (e.target.classList.contains('quick-btn')) {
+                    const question = e.target.dataset.question;
+                    this.input.value = question;
+                    this.sendMessage();
+                }
             });
-        });
+        }
         
         document.addEventListener('mousemove', (e) => this.drag(e));
         document.addEventListener('mouseup', () => this.stopDrag());
+    },
+    
+    clearConversation() {
+        if (confirm('确定要清空当前对话吗？')) {
+            this.conversationHistory = [];
+            this.saveConversationHistory();
+            this.messagesContainer.innerHTML = '';
+            this.renderWelcomeMessage();
+        }
     },
     
     startDrag(e) {
@@ -682,256 +674,162 @@ const Assistant = {
         this.float.style.cursor = '';
     },
     
-    search() {
-        this.searchKeyword = this.input.value.trim();
-        this.currentPage = 1;
-        
-        if (this.searchKeyword) {
-            this.addToHistory(this.searchKeyword);
-        }
-        
-        setTimeout(() => {
-            this.renderResults();
-        }, 300);
-    },
-    
-    addToHistory(keyword) {
-        if (!this.searchHistory.includes(keyword)) {
-            this.searchHistory.unshift(keyword);
-            if (this.searchHistory.length > 10) {
-                this.searchHistory.pop();
-            }
-            utils.storage.set('searchHistory', this.searchHistory);
-        }
-    },
-    
-    loadSearchHistory() {
-        this.searchHistory = utils.storage.get('searchHistory', []);
-    },
-    
-    getFilteredData() {
-        let allData = [];
-        
-        if (this.currentCategory === 'all') {
-            allData = [
-                ...this.data.history,
-                ...this.data.officials,
-                ...this.data.architecture,
-                ...this.data.literature
-            ];
+    renderWelcomeMessage() {
+        if (this.conversationHistory.length === 0) {
+            this.addMessage('ai', '您好！我是崖城智查，崖州古城的AI文化向导。\n\n我可以为您介绍：\n• 崖州古城的历史沿革\n• 古城建筑与四门布局\n• 贬官文化与历史人物\n• 相关历史文献资料\n\n请问有什么想了解的吗？');
         } else {
-            allData = this.data[this.currentCategory] || [];
-        }
-        
-        if (this.searchKeyword) {
-            const keyword = this.searchKeyword.toLowerCase();
-            return allData.filter(item => 
-                item.title.toLowerCase().includes(keyword) ||
-                item.summary.toLowerCase().includes(keyword)
-            );
-        }
-        
-        return allData;
-    },
-    
-    renderResults() {
-        const filteredData = this.getFilteredData();
-        const totalPages = Math.ceil(filteredData.length / this.itemsPerPage);
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        const pageData = filteredData.slice(start, end);
-        
-        this.loading.style.display = 'none';
-        this.empty.style.display = filteredData.length === 0 ? 'flex' : 'none';
-        this.resultsList.style.display = filteredData.length > 0 ? 'flex' : 'none';
-        
-        if (filteredData.length > 0) {
-            this.resultsList.innerHTML = pageData.map(item => this.createResultItem(item)).join('');
-            
-            this.resultsList.querySelectorAll('.result-item').forEach(item => {
-                item.addEventListener('click', () => this.toggleDetail(item));
+            this.conversationHistory.forEach(msg => {
+                this.addMessage(msg.role === 'user' ? 'user' : 'ai', msg.content, false);
             });
         }
-        
-        this.renderPagination(totalPages);
     },
     
-    createResultItem(item) {
-        const categoryNames = {
-            history: '历史沿革',
-            officials: '官员信息',
-            architecture: '建筑布局',
-            literature: '历史文献'
-        };
+    async sendMessage() {
+        const message = this.input.value.trim();
+        if (!message || this.isTyping) return;
         
-        return `
-            <div class="result-item" data-id="${item.id}">
-                <h4>${item.title}</h4>
-                <p>${item.summary}</p>
-                <div class="result-meta">
-                    <span class="result-category">${categoryNames[item.category]}</span>
-                    <span>点击查看详情</span>
-                </div>
-                <div class="result-detail" id="detail-${item.id}">
-                    ${this.createDetailContent(item.detail)}
-                </div>
+        // 添加用户消息
+        this.addMessage('user', message);
+        this.input.value = '';
+        
+        // 添加到历史记录
+        this.conversationHistory.push({ role: 'user', content: message });
+        this.trimHistory();
+        
+        // 显示加载状态
+        this.showLoading();
+        this.isTyping = true;
+        
+        try {
+            // 调用AI API
+            const response = await this.callAI(message);
+            this.hideLoading();
+            
+            // 添加AI回复
+            this.addMessage('ai', response);
+            this.conversationHistory.push({ role: 'assistant', content: response });
+            this.trimHistory();
+            this.saveConversationHistory();
+        } catch (error) {
+            this.hideLoading();
+            // 使用本地知识库作为备用
+            const localResponse = this.searchLocalKnowledge(message);
+            this.addMessage('ai', localResponse);
+        } finally {
+            this.isTyping = false;
+        }
+    },
+    
+    async callAI(message) {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                history: this.conversationHistory.slice(-5) // 只保留最近5轮对话
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('API请求失败');
+        }
+        
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        return data.reply;
+    },
+    
+    searchLocalKnowledge(keyword) {
+        const allData = [
+            ...this.knowledgeBase.history,
+            ...this.knowledgeBase.officials,
+            ...this.knowledgeBase.architecture,
+            ...this.knowledgeBase.literature
+        ];
+        
+        const lowerKeyword = keyword.toLowerCase();
+        const matches = allData.filter(item => 
+            item.title.toLowerCase().includes(lowerKeyword) ||
+            item.summary.toLowerCase().includes(lowerKeyword)
+        );
+        
+        if (matches.length > 0) {
+            const item = matches[0];
+            let response = `【${item.title}】\n\n${item.summary}\n\n`;
+            
+            if (item.detail.description) {
+                response += item.detail.description;
+            }
+            
+            return response;
+        }
+        
+        return '抱歉，我暂时无法回答这个问题。您可以尝试询问关于崖州古城的历史、建筑、人物或文献等方面的问题。';
+    },
+    
+    addMessage(role, content, animate = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${role}`;
+        
+        const avatar = role === 'user' ? '👤' : '🤖';
+        const name = role === 'user' ? '您' : '崖城智查';
+        
+        // 将换行符转换为HTML
+        const formattedContent = content.replace(/\n/g, '<br>');
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">${avatar}</div>
+            <div class="message-content">
+                <div class="message-header">${name}</div>
+                <div class="message-body">${formattedContent}</div>
             </div>
         `;
+        
+        this.messagesContainer.appendChild(messageDiv);
+        
+        if (animate) {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                messageDiv.style.transition = 'all 0.3s ease';
+                messageDiv.style.opacity = '1';
+                messageDiv.style.transform = 'translateY(0)';
+            }, 10);
+        }
+        
+        this.scrollToBottom();
     },
     
-    createDetailContent(detail) {
-        let html = '';
-        
-        if (detail.description) {
-            html += `<p>${detail.description}</p>`;
-        }
-        
-        if (detail.timeline) {
-            html += `
-                <h5>历史时间线</h5>
-                <ul class="detail-list">
-                    ${detail.timeline.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.title) {
-            html += `<h5>官职：${detail.title}</h5>`;
-        }
-        
-        if (detail.tenure) {
-            html += `<p><strong>任期：</strong>${detail.tenure}</p>`;
-        }
-        
-        if (detail.achievements) {
-            html += `
-                <h5>主要政绩</h5>
-                <ul class="detail-list">
-                    ${detail.achievements.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.evaluation) {
-            html += `<p><strong>历史评价：</strong>${detail.evaluation}</p>`;
-        }
-        
-        if (detail.structure) {
-            html += `
-                <h5>建筑结构</h5>
-                <ul class="detail-list">
-                    ${detail.structure.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.features) {
-            html += `
-                <h5>建筑特色</h5>
-                <ul class="detail-list">
-                    ${detail.features.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.layout) {
-            html += `
-                <h5>布局结构</h5>
-                <ul class="detail-list">
-                    ${detail.layout.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.significance) {
-            html += `
-                <h5>重要意义</h5>
-                <ul class="detail-list">
-                    ${detail.significance.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.content) {
-            html += `
-                <h5>内容概要</h5>
-                <ul class="detail-list">
-                    ${detail.content.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.value) {
-            html += `
-                <h5>文献价值</h5>
-                <ul class="detail-list">
-                    ${detail.value.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.representative) {
-            html += `
-                <h5>代表作品</h5>
-                <ul class="detail-list">
-                    ${detail.representative.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.theme) {
-            html += `
-                <h5>创作主题</h5>
-                <ul class="detail-list">
-                    ${detail.theme.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        if (detail.events) {
-            html += `
-                <h5>重要事件</h5>
-                <ul class="detail-list">
-                    ${detail.events.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-        
-        return html;
+    showLoading() {
+        this.loading.style.display = 'flex';
+        this.scrollToBottom();
     },
     
-    toggleDetail(item) {
-        const detail = item.querySelector('.result-detail');
-        detail.classList.toggle('active');
+    hideLoading() {
+        this.loading.style.display = 'none';
     },
     
-    renderPagination(totalPages) {
-        if (totalPages <= 1) {
-            this.pagination.innerHTML = '';
-            return;
-        }
-        
-        let html = `<span class="pagination-info">第 ${this.currentPage} / ${totalPages} 页</span>`;
-        
-        html += `<button class="pagination-btn" ${this.currentPage === 1 ? 'disabled' : ''} 
-            onclick="Assistant.goToPage(${this.currentPage - 1})">上一页</button>`;
-        
-        for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="pagination-btn ${this.currentPage === i ? 'active' : ''}" 
-                onclick="Assistant.goToPage(${i})">${i}</button>`;
-        }
-        
-        html += `<button class="pagination-btn" ${this.currentPage === totalPages ? 'disabled' : ''} 
-            onclick="Assistant.goToPage(${this.currentPage + 1})">下一页</button>`;
-        
-        this.pagination.innerHTML = html;
+    scrollToBottom() {
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
     },
     
-    goToPage(page) {
-        const totalPages = Math.ceil(this.getFilteredData().length / this.itemsPerPage);
-        if (page < 1 || page > totalPages) return;
-        this.currentPage = page;
-        this.renderResults();
+    trimHistory() {
+        if (this.conversationHistory.length > this.maxHistoryLength * 2) {
+            this.conversationHistory = this.conversationHistory.slice(-this.maxHistoryLength * 2);
+        }
+    },
+    
+    saveConversationHistory() {
+        utils.storage.set('assistantHistory', this.conversationHistory);
+    },
+    
+    loadConversationHistory() {
+        this.conversationHistory = utils.storage.get('assistantHistory', []);
     },
     
     hide() {
@@ -942,6 +840,7 @@ const Assistant = {
     show() {
         this.float.style.display = 'flex';
         this.toggleBtn.style.display = 'none';
+        this.input.focus();
     },
     
     minimize() {
@@ -954,8 +853,27 @@ const Assistant = {
         } else {
             this.hide();
         }
+    },
+    
+    // 兼容旧版接口
+    search() {
+        this.sendMessage();
     }
 };
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', () => {
+    Navbar.init();
+    PageProgress.init();
+    GlobalControls.init();
+    Modal.init();
+    GuideOverlay.init();
+    ScrollReveal.init();
+    Assistant.init();
+
+    console.log('%c崖城风骨——崖州古城建筑文化数字图鉴', 'color: #8B4513; font-size: 18px; font-weight: bold;');
+    console.log('%c全国大学生计算机设计大赛参赛作品', 'color: #2F5D7A; font-size: 14px;');
+});
 
 // ===== 页面卸载清理 =====
 window.addEventListener('beforeunload', () => {

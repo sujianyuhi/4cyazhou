@@ -66,15 +66,20 @@
         </button>
     </nav>
 
-    <!-- 全局控件 -->
-    <!-- 智能信息查询助手 -->
+    <!-- AI智能助手 -->
     <div class="assistant-float" id="assistant-float">
         <div class="assistant-header" id="assistant-header">
             <div class="assistant-title">
                 <span class="assistant-icon">🤖</span>
                 <span>崖城智查</span>
+                <span class="assistant-badge">AI</span>
             </div>
             <div class="assistant-controls">
+                <button class="assistant-btn" id="assistant-clear" title="清空对话">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                </button>
                 <button class="assistant-btn" id="assistant-min" title="最小化">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="6" y1="12" x2="18" y2="12"/>
@@ -89,41 +94,42 @@
             </div>
         </div>
         
-        <div class="assistant-content">
+        <div class="assistant-chat" id="assistant-chat">
+            <div class="chat-messages" id="chat-messages"></div>
+            
+            <div class="chat-loading" id="chat-loading" style="display: none;">
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span>AI思考中...</span>
+            </div>
+            
+            <div class="quick-questions" id="quick-questions">
+                <button class="quick-btn" data-question="崖州古城的历史起源是什么？">古城历史</button>
+                <button class="quick-btn" data-question="崖州古城有哪些著名历史人物？">历史人物</button>
+                <button class="quick-btn" data-question="崖州古城的四门分别是什么？">古城四门</button>
+                <button class="quick-btn" data-question="苏轼与崖州有什么渊源？">苏轼</button>
+            </div>
+        </div>
+        
+        <div class="assistant-input-area">
             <div class="assistant-search">
-                <input type="text" id="assistant-input" placeholder="搜索崖州古城相关信息..." />
-                <button id="assistant-search-btn">
+                <input type="text" id="assistant-input" placeholder="输入您的问题，按Enter发送..." autocomplete="off" />
+                <button id="assistant-search-btn" title="发送">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                     </svg>
                 </button>
             </div>
-            
-            <div class="assistant-categories">
-                <button class="category-btn active" data-category="all">全部</button>
-                <button class="category-btn" data-category="history">历史沿革</button>
-                <button class="category-btn" data-category="officials">官员信息</button>
-                <button class="category-btn" data-category="architecture">建筑布局</button>
-                <button class="category-btn" data-category="literature">历史文献</button>
-            </div>
-            
-            <div class="assistant-results" id="assistant-results">
-                <div class="results-loading" id="results-loading">
-                    <div class="loading-spinner"></div>
-                    <span>正在查询中...</span>
-                </div>
-                <div class="results-empty" id="results-empty">
-                    <span>暂无搜索结果，请输入关键词查询</span>
-                </div>
-                <div class="results-list" id="results-list"></div>
-            </div>
-            
-            <div class="assistant-pagination" id="assistant-pagination"></div>
         </div>
         
         <div class="assistant-resize" id="assistant-resize"></div>
     </div>
+
+    <!-- 全局控件 -->
     
     <div class="global-controls">
         <button id="assistant-toggle" class="control-btn" title="智能助手">
@@ -188,6 +194,20 @@
         <div class="scroll-hint">
             <span>向下滚动探索</span>
             <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- 引言部分 -->
+    <section class="preface-section">
+        <div class="container">
+            <div class="preface-content scroll-reveal">
+                <div class="preface-text">
+                    <p class="preface-desc">远河在此拐弯，淤积的高埠托起一座古城，静立千年。背山靠海，负阴抱阳，文明门为望南山而东移三十步，街巷七转八角只为留住过路的海风。这座天涯之城，曾是海上丝路最南端的驿站，让中原礼制与南海涛声悄然相融。砖石不语，却记得千年的商船、贬官，以及学宫里的读书声，回荡不息。</p>
+                </div>
+                <div class="preface-image">
+                    <img src="images/content/Introduction.png" alt="崖州古城引言配图">
+                </div>
+            </div>
         </div>
     </section>
 

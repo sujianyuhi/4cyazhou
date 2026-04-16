@@ -254,6 +254,14 @@
     height: auto;
 }
 
+.site-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+}
+
 .site-svg .mountain {
     fill: none;
     stroke: var(--color-stone);
@@ -322,6 +330,318 @@
     font-size: var(--text-sm);
     color: var(--color-stone);
     line-height: 1.6;
+}
+
+/* ===== 建筑格局 ===== */
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.layout-diagram {
+    flex: 1;
+    background: var(--color-white);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layout-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.layout-features {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.layout-card {
+    padding: 1.5rem;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.layout-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.layout-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.layout-card h4 {
+    font-family: var(--font-serif);
+    color: var(--color-ochre);
+    margin-bottom: 0.5rem;
+    font-size: var(--text-lg);
+}
+
+.layout-card p {
+    font-size: var(--text-sm);
+    color: var(--color-stone);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+    }
+    
+    .layout-features {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== 卷轴弹窗 ===== */
+.scroll-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.scroll-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.scroll-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 900px;
+    height: 500px;
+}
+
+.scroll-roll {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(90deg, #8B4513 0%, #A0522D 30%, #8B4513 50%, #654321 100%);
+    border-radius: 20px;
+    box-shadow: 
+        inset 2px 0 5px rgba(0,0,0,0.3),
+        inset -2px 0 5px rgba(255,255,255,0.1),
+        5px 0 15px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+.scroll-roll.left {
+    left: 0;
+    transform: translateX(-50%);
+}
+
+.scroll-roll.right {
+    right: 0;
+    transform: translateX(50%);
+}
+
+.scroll-roll::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    background: linear-gradient(90deg, #5D3A1A, #8B4513, #5D3A1A);
+    border-radius: 4px;
+}
+
+.scroll-content {
+    position: relative;
+    background: linear-gradient(180deg, #F5F5DC 0%, #FAF0E6 50%, #F5F5DC 100%);
+    width: 0;
+    height: auto;
+    max-height: 80vh;
+    overflow: hidden;
+    border-top: 3px solid #8B4513;
+    border-bottom: 3px solid #8B4513;
+    box-shadow: 
+        inset 0 0 30px rgba(139, 69, 19, 0.1),
+        0 10px 40px rgba(0,0,0,0.3);
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-modal.active .scroll-content {
+    width: 100%;
+}
+
+.scroll-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #8B4513;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 0.5s ease 1s;
+}
+
+.scroll-modal.active .scroll-close {
+    opacity: 1;
+}
+
+.scroll-close:hover {
+    background: #8B4513;
+    color: #fff;
+}
+
+.scroll-body {
+    padding: 2.5rem 3rem;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.8s;
+    min-width: 800px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.scroll-modal.active .scroll-body {
+    opacity: 1;
+}
+
+.scroll-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: #8B4513;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #D2691E;
+    padding-bottom: 0.75rem;
+}
+
+.scroll-section {
+    margin-bottom: 1.5rem;
+}
+
+.scroll-intro {
+    text-align: center;
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.fengshui-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.fengshui-item {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    background: rgba(139, 69, 19, 0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.fengshui-name {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: #8B4513;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.fengshui-desc {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.scroll-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: #8B4513;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.scroll-quote {
+    background: rgba(139, 69, 19, 0.05);
+    border-left: 4px solid #D2691E;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.scroll-quote p {
+    color: #555;
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .scroll-container {
+        width: 95%;
+        height: auto;
+        max-height: 85vh;
+    }
+    
+    .scroll-content {
+        height: auto;
+        min-height: 400px;
+        max-height: 85vh;
+    }
+    
+    .scroll-body {
+        min-width: auto;
+        padding: 1.5rem;
+        max-height: 75vh;
+    }
+    
+    .fengshui-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* ===== 城门展示 ===== */
