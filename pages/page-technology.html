@@ -201,6 +201,95 @@
         </div>
     </section>
 
+    <!-- 多维度时间轴 -->
+    <section class="timeline-section">
+        <div class="timeline-header">
+            <h2 class="timeline-title">营造技艺历史演变</h2>
+            <p class="timeline-subtitle">横跨千年的建筑智慧传承</p>
+        </div>
+
+        <div class="timeline-container" id="timeline-container">
+            <!-- 背景古画层 -->
+            <div class="timeline-bg">
+                <img src="../images/content/ancient-scroll.jpg" alt="古画长卷" id="scroll-bg">
+            </div>
+
+            <!-- 时间轴主体 -->
+            <div class="timeline-wrapper" id="timeline-wrapper">
+                <!-- 朝代维度 -->
+                <div class="timeline-track dynasty-track">
+                    <div class="track-label">朝代</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="dynasty-nodes"></div>
+                </div>
+
+                <!-- 工艺维度 -->
+                <div class="timeline-track craft-track">
+                    <div class="track-label">工艺</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="craft-nodes"></div>
+                </div>
+
+                <!-- 工匠制度维度 -->
+                <div class="timeline-track artisan-track">
+                    <div class="track-label">工匠制度</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="artisan-nodes"></div>
+                </div>
+
+                <!-- 建筑工具维度 -->
+                <div class="timeline-track tool-track">
+                    <div class="track-label">建筑工具</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="tool-nodes"></div>
+                </div>
+
+                <!-- 材料来源维度 -->
+                <div class="timeline-track material-track">
+                    <div class="track-label">材料来源</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="material-nodes"></div>
+                </div>
+            </div>
+
+            <!-- 导航控制 -->
+            <div class="timeline-nav">
+                <button class="nav-btn nav-prev" id="timeline-prev">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <div class="nav-progress">
+                    <div class="progress-bar" id="timeline-progress"></div>
+                </div>
+                <button class="nav-btn nav-next" id="timeline-next">
+                    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- 缩放提示 -->
+            <div class="timeline-hint">
+                <span>← 左右拖动或滚动浏览 →</span>
+            </div>
+        </div>
+
+        <!-- 详情弹窗 -->
+        <div class="timeline-modal" id="timeline-modal">
+            <div class="modal-overlay" id="modal-overlay"></div>
+            <div class="modal-content-box" id="modal-content">
+                <button class="modal-close-btn" id="modal-close">&times;</button>
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modal-title"></h3>
+                    <span class="modal-era" id="modal-era"></span>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-image" id="modal-image"></div>
+                    <div class="modal-desc" id="modal-desc"></div>
+                    <div class="modal-features" id="modal-features"></div>
+                    <div class="modal-source" id="modal-source"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="content-section bg-light">
         <div class="container">
             <div class="section-header scroll-reveal">

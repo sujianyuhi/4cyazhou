@@ -1,6 +1,6 @@
 /**
- * 交互式城门转盘组件 - 中心指针版本
- * 支持拖拽旋转、指针指向检测和信息展示
+ * 城门转盘组件 - 点击切换版本
+ * 支持点击城门切换信息展示
  */
 
 const GateWheel = {
@@ -8,12 +8,18 @@ const GateWheel = {
     wheel: null,
     infoPanel: null,
     wheelItems: null,
+    pointerArrow: null,
 
-    // 状态
-    isDragging: false,
-    currentAngle: 0,
-    startAngle: 0,
-    lastAngle: 0,
+    // 当前激活的城门
+    activeGate: 'north',
+
+    // 城门角度映射（从顶部顺时针）
+    gateAngles: {
+        north: 0,
+        east: 90,
+        south: 180,
+        west: 270
+    },
 
     // 城门数据
     gateData: {
@@ -55,9 +61,6 @@ const GateWheel = {
         }
     },
 
-    // 当前激活的城门
-    activeGate: 'north',
-
     /**
      * 初始化
      */
@@ -65,6 +68,7 @@ const GateWheel = {
         this.wheel = document.getElementById('wheel');
         this.infoPanel = document.getElementById('info-panel');
         this.wheelItems = document.querySelectorAll('.wheel-item');
+        this.pointerArrow = document.querySelector('.pointer-arrow');
 
         if (!this.wheel) return;
 
@@ -74,194 +78,47 @@ const GateWheel = {
     },
 
     /**
-     * 绑定事件
+     * 绑定事件 - 只保留点击事件
      */
     bindEvents() {
-        // 鼠标事件
-        this.wheel.addEventListener('mousedown', this.handleStart.bind(this));
-        document.addEventListener('mousemove', this.handleMove.bind(this));
-        document.addEventListener('mouseup', this.handleEnd.bind(this));
-
-        // 触摸事件
-        this.wheel.addEventListener('touchstart', this.handleStart.bind(this), { passive: false });
-        document.addEventListener('touchmove', this.handleMove.bind(this), { passive: false });
-        document.addEventListener('touchend', this.handleEnd.bind(this));
-
-        // 点击城门项目
+        // 点击城门项目切换信息
         this.wheelItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                if (!this.isDragging) {
-                    const gate = item.dataset.gate;
-                    this.rotateToGate(gate);
-                }
+            item.addEventListener('click', () => {
+                const gate = item.dataset.gate;
+                this.selectGate(gate);
             });
         });
 
-        // 防止拖拽时选中文本
-        this.wheel.addEventListener('selectstart', (e) => e.preventDefault());
-    },
-
-    /**
-     * 获取事件坐标
-     */
-    getEventPoint(e) {
-        if (e.touches && e.touches.length > 0) {
-            return {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY
-            };
+        // 查看详细资料按钮
+        const panelLink = document.getElementById('panel-link');
+        if (panelLink) {
+            panelLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showDetailModal();
+            });
         }
-        return {
-            x: e.clientX,
-            y: e.clientY
-        };
     },
 
     /**
-     * 获取角度
+     * 选择城门
      */
-    getAngle(point) {
-        const rect = this.wheel.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+    selectGate(gate) {
+        if (gate === this.activeGate) return;
 
-        const dx = point.x - centerX;
-        const dy = point.y - centerY;
-
-        // 计算角度（顺时针，从顶部开始为0）
-        let angle = Math.atan2(dx, -dy) * (180 / Math.PI);
-        if (angle < 0) angle += 360;
-
-        return angle;
+        this.activeGate = gate;
+        this.highlightActiveGate(gate);
+        this.updateInfoPanel(gate);
+        this.rotatePointer(gate);
     },
 
     /**
-     * 处理开始拖拽
+     * 旋转指针指向城门
      */
-    handleStart(e) {
-        if (e.target.closest('.wheel-item')) return; // 点击城门项目时不拖拽
-
-        e.preventDefault();
-
-        this.isDragging = true;
-        this.wheel.classList.add('dragging');
-
-        const point = this.getEventPoint(e);
-        this.startAngle = this.getAngle(point);
-        this.lastAngle = this.currentAngle;
-    },
-
-    /**
-     * 处理拖拽移动
-     */
-    handleMove(e) {
-        if (!this.isDragging) return;
-
-        e.preventDefault();
-
-        const point = this.getEventPoint(e);
-        const angle = this.getAngle(point);
-
-        // 计算旋转角度差
-        let deltaAngle = angle - this.startAngle;
-
-        // 处理跨越0度的情况
-        if (deltaAngle > 180) deltaAngle -= 360;
-        if (deltaAngle < -180) deltaAngle += 360;
-
-        // 更新当前角度
-        this.currentAngle = this.lastAngle + deltaAngle;
-
-        // 应用旋转
-        this.applyRotation();
-
-        // 检测指向的城门
-        this.detectActiveGate();
-    },
-
-    /**
-     * 处理结束拖拽
-     */
-    handleEnd(e) {
-        if (!this.isDragging) return;
-
-        this.isDragging = false;
-        this.wheel.classList.remove('dragging');
-
-        // 直接吸附到最近的城门（无惯性）
-        this.snapToNearestGate();
-    },
-
-    /**
-     * 应用旋转
-     */
-    applyRotation() {
-        this.wheel.style.transform = `rotate(${this.currentAngle}deg)`;
+    rotatePointer(gate) {
+        if (!this.pointerArrow) return;
         
-        // 标记反向旋转，保持正向
-        const gateBaseTransforms = {
-            south: 'translateX(-50%)',
-            east: 'translateY(-50%)',
-            north: 'translateX(-50%)',
-            west: 'translateY(-50%)'
-        };
-        
-        this.wheelItems.forEach(item => {
-            const gate = item.dataset.gate;
-            const baseTransform = gateBaseTransforms[gate];
-            item.style.transform = `${baseTransform} rotate(${-this.currentAngle}deg)`;
-        });
-    },
-
-    /**
-     * 标准化角度到0-360范围
-     */
-    normalizeAngle(angle) {
-        let normalized = angle % 360;
-        if (normalized < 0) normalized += 360;
-        return normalized;
-    },
-
-    /**
-     * 检测当前指针指向的城门
-     * 指针固定在中心指向顶部（0度方向）
-     * 当城门旋转到顶部时被选中
-     */
-    detectActiveGate() {
-        // 城门角度映射 - 城门在转盘上的固定位置
-        const gateAngles = {
-            north: 0,    // 北门在顶部
-            east: 90,    // 东门在右侧
-            south: 180,  // 南门在底部
-            west: 270    // 西门在左侧
-        };
-
-        // 计算每个城门相对于指针（顶部0度）的距离
-        let closestGate = null;
-        let minDiff = Infinity;
-
-        Object.entries(gateAngles).forEach(([gate, baseAngle]) => {
-            // 计算城门当前实际角度（考虑转盘旋转）
-            const actualAngle = this.normalizeAngle(baseAngle + this.currentAngle);
-            
-            // 计算到0度（顶部/指针位置）的最短距离
-            const diff = Math.min(
-                Math.abs(actualAngle),
-                Math.abs(360 - actualAngle)
-            );
-
-            if (diff < minDiff) {
-                minDiff = diff;
-                closestGate = gate;
-            }
-        });
-
-        // 当角度差小于阈值时更新
-        if (minDiff < 30 && closestGate !== this.activeGate) {
-            this.activeGate = closestGate;
-            this.highlightActiveGate(closestGate);
-            this.updateInfoPanel(closestGate);
-        }
+        const angle = this.gateAngles[gate];
+        this.pointerArrow.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
     },
 
     /**
@@ -313,104 +170,6 @@ const GateWheel = {
             // 移除过渡效果
             this.infoPanel.classList.remove('transitioning');
         }, 200);
-    },
-
-    /**
-     * 吸附到最近的城门 - 使用最短路径
-     * 停止拖拽后，转盘自动旋转使最近的城门对齐指针（顶部）
-     */
-    snapToNearestGate() {
-        // 城门角度映射 - 城门在转盘上的固定位置
-        const gateAngles = {
-            north: 0,    // 北门在顶部
-            east: 90,    // 东门在右侧
-            south: 180,  // 南门在底部
-            west: 270    // 西门在左侧
-        };
-
-        // 找到距离指针（顶部0度）最近的城门
-        let closestGate = null;
-        let minDiff = Infinity;
-        let shortestRotation = 0;
-
-        Object.entries(gateAngles).forEach(([gate, baseAngle]) => {
-            // 计算城门当前相对于指针的角度
-            const currentGateAngle = this.normalizeAngle(baseAngle + this.currentAngle);
-            
-            // 计算需要旋转多少度才能让这个城门到达顶部（0度）
-            let rotationNeeded = -currentGateAngle;
-            
-            // 标准化到 -180 到 180 度范围内，确保最短路径
-            if (rotationNeeded > 180) rotationNeeded -= 360;
-            if (rotationNeeded < -180) rotationNeeded += 360;
-            
-            // 计算绝对角度差
-            const diff = Math.abs(rotationNeeded);
-
-            if (diff < minDiff) {
-                minDiff = diff;
-                closestGate = gate;
-                shortestRotation = rotationNeeded;
-            }
-        });
-
-        // 计算目标角度（使用最短路径）
-        const targetAngle = this.currentAngle + shortestRotation;
-
-        // 使用CSS过渡动画吸附到指针位置
-        this.wheel.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-        this.currentAngle = targetAngle;
-        this.applyRotation();
-
-        // 动画结束后移除过渡并更新状态
-        setTimeout(() => {
-            this.wheel.style.transition = '';
-            if (closestGate) {
-                this.activeGate = closestGate;
-                this.highlightActiveGate(closestGate);
-                this.updateInfoPanel(closestGate);
-            }
-        }, 500);
-    },
-
-    /**
-     * 旋转到指定城门 - 使用最短路径
-     */
-    rotateToGate(gate) {
-        // 城门角度映射 - 城门在转盘上的固定位置
-        const gateAngles = {
-            north: 0,    // 北门在顶部
-            east: 90,    // 东门在右侧
-            south: 180,  // 南门在底部
-            west: 270    // 西门在左侧
-        };
-
-        const targetBaseAngle = gateAngles[gate];
-        
-        // 计算城门当前相对于指针的角度
-        const currentGateAngle = this.normalizeAngle(targetBaseAngle + this.currentAngle);
-        
-        // 计算需要旋转多少度才能让这个城门到达顶部（0度）
-        let rotationNeeded = -currentGateAngle;
-        
-        // 标准化到 -180 到 180 度范围内，确保最短路径
-        if (rotationNeeded > 180) rotationNeeded -= 360;
-        if (rotationNeeded < -180) rotationNeeded += 360;
-        
-        // 计算目标角度
-        const targetAngle = this.currentAngle + rotationNeeded;
-
-        // 应用旋转动画
-        this.wheel.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-        this.currentAngle = targetAngle;
-        this.applyRotation();
-
-        setTimeout(() => {
-            this.wheel.style.transition = '';
-            this.activeGate = gate;
-            this.highlightActiveGate(gate);
-            this.updateInfoPanel(gate);
-        }, 500);
     },
 
     /**
