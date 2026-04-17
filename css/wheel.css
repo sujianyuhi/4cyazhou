@@ -49,18 +49,7 @@
     width: 450px;
     height: 450px;
     border-radius: 50%;
-    cursor: grab;
     user-select: none;
-    touch-action: none;
-    transition: transform 0.1s linear;
-}
-
-.wheel:active {
-    cursor: grabbing;
-}
-
-.wheel.dragging {
-    transition: none;
 }
 
 /* 转盘背景 */
@@ -110,13 +99,14 @@
     left: 50%;
     width: 0;
     height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 40px solid #c44d34;
-    transform: translate(-50%, -100%);
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 70px solid #c44d34;
+    transform: translate(-50%, -100%) rotate(0deg);
     transform-origin: center bottom;
-    filter: drop-shadow(0 2px 4px rgba(196, 77, 52, 0.4));
+    filter: drop-shadow(0 3px 6px rgba(196, 77, 52, 0.4));
     animation: pointerPulse 2s ease-in-out infinite;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .fixed-pointer .pointer-dot {
@@ -158,35 +148,34 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.1s linear;
 }
 
 /* 南门 - 底部，中心与转盘边缘相切 */
 .wheel-item[data-gate="south"] {
     bottom: -55px;
     left: 50%;
-    transform: translateX(-50%) rotate(0deg);
+    transform: translateX(-50%);
 }
 
 /* 东门 - 右侧，中心与转盘边缘相切 */
 .wheel-item[data-gate="east"] {
     right: -55px;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%);
 }
 
 /* 北门 - 顶部，中心与转盘边缘相切 */
 .wheel-item[data-gate="north"] {
     top: -55px;
     left: 50%;
-    transform: translateX(-50%) rotate(0deg);
+    transform: translateX(-50%);
 }
 
 /* 西门 - 左侧，中心与转盘边缘相切 */
 .wheel-item[data-gate="west"] {
     left: -55px;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%);
 }
 
 .item-marker {
@@ -540,9 +529,9 @@
     }
     
     .fixed-pointer .pointer-arrow {
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 35px solid #c44d34;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 55px solid #c44d34;
     }
 }
 
@@ -626,9 +615,9 @@
     }
     
     .fixed-pointer .pointer-arrow {
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 30px solid #c44d34;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 45px solid #c44d34;
     }
     
     .fixed-pointer .pointer-dot {
@@ -644,22 +633,18 @@
     
     .wheel-item[data-gate="south"] {
         bottom: -45px;
-        transform: translateX(-50%) rotate(0deg);
     }
     
     .wheel-item[data-gate="east"] {
         right: -45px;
-        transform: translateY(-50%) rotate(0deg);
     }
     
     .wheel-item[data-gate="north"] {
         top: -45px;
-        transform: translateX(-50%) rotate(0deg);
     }
     
     .wheel-item[data-gate="west"] {
         left: -45px;
-        transform: translateY(-50%) rotate(0deg);
     }
     
     .item-marker {
