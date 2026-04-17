@@ -436,6 +436,13 @@ const Assistant = {
     maxHistoryLength: 10,
     isTyping: false,
     
+    // Token 优化相关
+    requestCache: new Map(), // 请求缓存
+    cacheMaxSize: 50, // 最大缓存数量
+    lastRequestTime: 0, // 上次请求时间
+    debounceDelay: 500, // 防抖延迟（毫秒）
+    minInputLength: 2, // 最小输入长度
+    
     // 崖州古城知识库（作为备用）
     knowledgeBase: {
         history: [
@@ -686,7 +693,23 @@ const Assistant = {
     
     async sendMessage() {
         const message = this.input.value.trim();
-        if (!message || this.isTyping) return;
+        
+        // 输入预处理：检查最小长度
+        if (!message || message.length < this.minInputLength) {
+            return;
+        }
+        
+        // 防抖检查：防止快速重复提交
+        const now = Date.now();
+        if (now - this.lastRequestTime < this.debounceDelay) {
+            console.log('请求过于频繁，请稍后再试');
+            return;
+        }
+        
+        if (this.isTyping) return;
+        
+        // 更新最后请求时间
+        this.lastRequestTime = now;
         
         // 添加用户消息
         this.addMessage('user', message);
@@ -701,9 +724,24 @@ const Assistant = {
         this.isTyping = true;
         
         try {
+            // 检查缓存：相同问题直接返回缓存结果
+            const cacheKey = this.generateCacheKey(message);
+            if (this.requestCache.has(cacheKey)) {
+                const cachedResponse = this.requestCache.get(cacheKey);
+                this.hideLoading();
+                this.addMessage('ai', cachedResponse);
+                this.conversationHistory.push({ role: 'assistant', content: cachedResponse });
+                this.trimHistory();
+                this.saveConversationHistory();
+                return;
+            }
+            
             // 调用AI API
             const response = await this.callAI(message);
             this.hideLoading();
+            
+            // 缓存响应
+            this.cacheResponse(cacheKey, response);
             
             // 添加AI回复
             this.addMessage('ai', response);
@@ -718,6 +756,30 @@ const Assistant = {
         } finally {
             this.isTyping = false;
         }
+    },
+    
+    // 生成缓存键
+    generateCacheKey(message) {
+        // 标准化消息：去除多余空格、转为小写
+        const normalized = message.toLowerCase().replace(/\s+/g, ' ').trim();
+        // 使用简单的哈希函数
+        let hash = 0;
+        for (let i = 0; i < normalized.length; i++) {
+            const char = normalized.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash.toString();
+    },
+    
+    // 缓存响应
+    cacheResponse(key, response) {
+        // 如果缓存已满，删除最旧的条目
+        if (this.requestCache.size >= this.cacheMaxSize) {
+            const firstKey = this.requestCache.keys().next().value;
+            this.requestCache.delete(firstKey);
+        }
+        this.requestCache.set(key, response);
     },
     
     async callAI(message) {

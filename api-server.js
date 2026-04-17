@@ -170,10 +170,21 @@ async function handleAPIRequest(req, res, pathname) {
                     return;
                 }
 
+                // 优化历史记录：只保留最近3轮对话，减少上下文 Token
+                const optimizedHistory = history.slice(-3);
+                
+                // 压缩历史记录内容：过长的消息进行摘要
+                const compressedHistory = optimizedHistory.map(msg => ({
+                    role: msg.role,
+                    content: msg.content.length > 200 
+                        ? msg.content.substring(0, 200) + '...' 
+                        : msg.content
+                }));
+
                 // 构建消息数组
                 const messages = [
                     { role: 'system', content: SYSTEM_PROMPT },
-                    ...history,
+                    ...compressedHistory,
                     { role: 'user', content: message }
                 ];
 
