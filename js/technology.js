@@ -181,11 +181,165 @@ const WaterSystem = {
 document.addEventListener('DOMContentLoaded', () => {
     TechTabs.init();
     WaterSystem.init();
+    MultiDimensionalTimeline.init();
+    YachengXuegong.init();
 });
 
 window.addEventListener('beforeunload', () => {
     WaterSystem.stop();
 });
+
+window.addEventListener('resize', () => {
+    if (MultiDimensionalTimeline.wrapper) {
+        MultiDimensionalTimeline.unifyTrackWidths();
+    }
+});
+
+// ===== 崖城学宫交互系统 =====
+const YachengXuegong = {
+    infoCard: null,
+    cardTitle: null,
+    cardBody: null,
+
+    nodeData: [
+        {
+            title: '始建与变迁',
+            content: '始建于北宋庆历四年，历经宋、元、明、清十数次迁建重修，清道光三年迁至今址定型，现存以清代风格为主。',
+            details: [
+                { label: '始建年代', value: '北宋庆历四年（1044年）' },
+                { label: '迁建时间', value: '南宋淳祐年间' },
+                { label: '历史地位', value: '海南第一庙' }
+            ]
+        },
+        {
+            title: '整体布局与建筑风格',
+            content: '坐北朝南，中轴对称，庙学合一宫殿式建筑群，仿中原礼制、融海南海洋特色，庄重恢弘，适配湿热气候。',
+            details: [
+                { label: '布局特点', value: '中轴对称、三进院落' },
+                { label: '建筑风格', value: '中原官式+岭南特色' },
+                { label: '占地面积', value: '约12000平方米' }
+            ]
+        },
+        {
+            title: '主体构造',
+            content: '由南至北依次为：文明门、棂星门、泮池泮桥、大成门、天子台、大成殿、崇圣祠，以火山岩、青砖、杉木构筑。',
+            details: [
+                { label: '核心建筑', value: '大成殿（五开间）' },
+                { label: '构架形式', value: '抬梁式木构架' },
+                { label: '屋顶形制', value: '重檐歇山顶' }
+            ]
+        },
+        {
+            title: '内部设计',
+            content: '大成殿祀孔子及四配十二哲，杉木榫卯梁架，设神龛、祭器、乐器；东西庑陈列典籍碑刻；崇圣祠祀孔子先人。',
+            details: [
+                { label: '主祀神位', value: '孔子（至圣先师）' },
+                { label: '配享诸贤', value: '四配十二哲' },
+                { label: '装饰工艺', value: '藻井彩绘、梁架彩画' }
+            ]
+        },
+        {
+            title: '建筑装饰 — 柱础',
+            content: '殿内柱础为覆盆莲花纹，外檐柱础为须弥座方形并饰万字纹，坚固且具吉祥寓意。',
+            details: [
+                { label: '主要形制', value: '覆盆式、鼓镜式、须弥座式' },
+                { label: '石材来源', value: '本地火山岩（玄武岩）' },
+                { label: '装饰题材', value: '缠枝莲、如意云纹' }
+            ]
+        },
+        {
+            title: '建筑装饰 — 脊饰',
+            content: '正脊双龙戏珠，戗角卷纹龙，脊端饰卷草纹，鸱吻为水鸟样式，融合中原礼制与沿海特色。',
+            details: [
+                { label: '正脊装饰', value: '龙凤纹鸱吻' },
+                { label: '垂脊装饰', value: '走兽排列' },
+                { label: '工艺材料', value: '灰塑、琉璃瓦' }
+            ]
+        },
+        {
+            title: '建筑装饰 — 门窗',
+            content: '门窗采用木雕工艺，设钱纹镂空窗与如意卷草纹，通风散热，适配海南湿热气候。',
+            details: [
+                { label: '窗格样式', value: '棂花窗格（几何+自然）' },
+                { label: '木材种类', value: '优质杉木' },
+                { label: '装饰题材', value: '梅兰竹菊、山水人物' }
+            ]
+        }
+    ],
+
+    init() {
+        this.infoCard = document.getElementById('xuegong-info-card');
+        this.cardTitle = document.getElementById('xg-card-title');
+        this.cardBody = document.getElementById('xg-card-body');
+
+        if (!this.infoCard || !this.cardTitle || !this.cardBody) return;
+
+        this.bindEvents();
+    },
+
+    bindEvents() {
+        const nodes = document.querySelectorAll('.xg-node');
+
+        nodes.forEach(node => {
+            node.addEventListener('click', () => {
+                const index = parseInt(node.dataset.index);
+                this.switchNode(index, node);
+            });
+        });
+    },
+
+    switchNode(index, clickedNode) {
+        const nodes = document.querySelectorAll('.xg-node');
+
+        nodes.forEach(n => n.classList.remove('active'));
+        if (clickedNode) {
+            clickedNode.classList.add('active');
+        }
+
+        const data = this.nodeData[index];
+        if (!data) return;
+
+        this.infoCard.classList.add('active');
+
+        this.cardBody.style.opacity = '0';
+        this.cardBody.style.transform = 'translateY(10px)';
+
+        setTimeout(() => {
+            this.cardTitle.textContent = data.title;
+
+            let detailsHTML = '';
+            if (data.details && data.details.length > 0) {
+                detailsHTML = '<div class="card-details">';
+                data.details.forEach(detail => {
+                    detailsHTML += `
+                        <div class="detail-item">
+                            <span class="detail-label">${detail.label}</span>
+                            <span class="detail-value">${detail.value}</span>
+                        </div>
+                    `;
+                });
+                detailsHTML += '</div>';
+            }
+
+            this.cardBody.innerHTML = `
+                <p>${data.content}</p>
+                ${detailsHTML}
+            `;
+
+            this.cardBody.classList.add('card-fade-in');
+            this.cardBody.style.opacity = '1';
+            this.cardBody.style.transform = 'translateY(0)';
+
+            setTimeout(() => {
+                this.cardBody.classList.remove('card-fade-in');
+            }, 400);
+        }, 200);
+
+        setTimeout(() => {
+            this.infoCard.classList.remove('active');
+        }, 800);
+    }
+};
 
 // ===== 多维度时间轴交互系统 =====
 const MultiDimensionalTimeline = {
@@ -202,36 +356,37 @@ const MultiDimensionalTimeline = {
 
     // 历史数据
     timelineData: {
-        dynasty: [
-            { year: '公元前214年', title: '秦朝', era: '秦代', desc: '秦统一岭南，设南海郡，开启中原建筑技术南传之路。', features: ['中原技术引入', '郡县制建立'], source: '《史记·秦始皇本纪》' },
-            { year: '公元1171年', title: '南宋', era: '宋代', desc: '崖州古城始建，奠定城市格局基础。', features: ['城池初建', '夯土城墙'], source: '《崖州志》' },
-            { year: '公元1276年', title: '元朝', era: '元代', desc: '元军南下，崖州城遭破坏后重建，引入北方建筑工艺。', features: ['城池重建', '砖石结构'], source: '《元史·地理志》' },
-            { year: '公元1450年', title: '明朝', era: '明代', desc: '明代大规模修建崖州城，形成完整的城防体系。', features: ['城墙加固', '四门确立'], source: '《明史·地理志》' },
-            { year: '公元1670年', title: '清朝', era: '清代', desc: '清康熙九年重修，广济桥等重要建筑落成。', features: ['桥梁建设', '水利完善'], source: '《崖州志·城池志》' }
-        ],
         craft: [
-            { year: '宋-元', title: '夯土筑墙', era: '传统工艺', desc: '采用本地黏土与贝壳灰混合夯实，形成坚固的城墙基座。', features: ['就地取材', '层层夯实'], source: '《营造法式》' },
-            { year: '明初', title: '火山岩砌筑', era: '地方特色', desc: '利用海南特有的火山岩作为建筑材料，形成独特的"黑石城"。', features: ['火山岩利用', '干砌工艺'], source: '《崖州志·物产志》' },
-            { year: '明中期', title: '蚝壳窗工艺', era: '热带适配', desc: '将蚝壳打磨成薄片用于窗棂，通风透光又抗台风。', features: ['蚝壳加工', '热带建筑'], source: '实地考察记录' },
-            { year: '清代', title: '石拱桥营造', era: '成熟技艺', desc: '采用单孔拱券结构建造广济桥，体现高超的石作技艺。', features: ['拱券技术', '灌浆工艺'], source: '《琼台志》' }
+            { year: '唐-宋初', title: '夯土版筑', era: '传统工艺', desc: '纯生土版筑，以木板为夹板、夯实生土，无砖石包裹，城垣简陋，仅御小寇，学宫早期附属建筑亦采用此工艺。', features: ['就地取材', '层层夯实'], source: '1. 清光绪《崖州志》：宋以前系土城，仅以木栅备寇，板筑夯实，无砖石包裹，城垣简陋，仅御小寇；2. 学宫考古报告：学宫早期附属建筑遗址，发现夯土版筑痕迹，与唐至宋初故城夯土工艺一致。' },
+            { year: '南宋', title: '砖土混构', era: '地方特色', desc: '土城芯体分层夯实，女墙独用砖砌，为砖城雏形；学宫同期采用芯填生土、外墙砌砖工艺。', features: ['火山岩利用', '干砌工艺'], source: '1. 南宋《吉阳军修城志》：庆元戊午，始筑土城，周回若干丈，女墙独用砖，以御矢石；2. 明人裴崇礼跋文：土城芯体，板筑夯实，女墙板筑陶砖，层层相扣，略具砖城之形；3. 清光绪《崖州志》：南宋学宫，墙体芯填生土，外墙砌砖，略具规模' },
+            { year: '明清', title: '砖石全包', era: '热带适配', desc: '采用条石基脚 + 夯土芯体 + 内外包砖结构，灰浆勾缝，城门拱券砌筑、学宫全砖砌筑。', features: ['蚝壳加工', '热带建筑'], source: '1. 明正德《琼台志》：洪武二十七年，重修崖州城，基脚条石，芯填生土，内外包砖，灰浆勾缝，城高丈余，坚不可摧；城门拱券，砖石砌筑，稳固耐用；2. 清光绪《崖州志》：康熙年间，复修崖州城，沿用砖石全包之法，灰浆拌糯米汁，抵御海风，经久不颓；3. 清光绪《崖州志》：明清重修学宫，正殿全砖砌筑，灰浆勾缝，坚致耐久' },
+            { year: '明代', title: '物勒工名刻砖', era: '成熟技艺', desc: '采城砖刻有烧制时间、窑户、工匠、监造官姓名，学宫砖刻学宫专用，符合造砖必刻姓名，以备查核的规定。', features: ['拱券技术', '灌浆工艺'], source: '1. 明代铭文城砖实物：万历三年，窑户赵六，工匠钱七，监造官李八，砖重廿斤；2.《明会典・工部》：凡造城砖，必刻窑户、工匠、监造官姓名，以备查核，若砖不合规，追责到底；3. 学宫出土铭文砖实物：嘉靖二十三年，窑户王九，工匠孙十，监造官刘十一，学宫专用。' },
+            { year: '清代', title: '木构榫卯工艺', era: '成熟技艺', desc: '学宫梁架、城门木构采用榫卯咬合，无钉无铆，稳固耐久，适配湿热气候，城门木构裹以铁皮。', features: ['拱券技术', '灌浆工艺'], source: '1. 清光绪《崖州志》：学宫梁架、斗拱，皆用榫卯咬合，无钉无铆，稳固耐久，遇台风不倾；2. 学宫考古报告：出土梁架、斗拱残件，榫卯结构清晰，工艺精湛；3. 明正德《琼台志》：城门木构，榫卯连接，裹以铁皮，启闭灵活，经久耐用。' }
         ],
         artisan: [
-            { year: '宋元时期', title: '徭役制度', era: '官营工匠', desc: '官府征发民夫参与城池建设，工匠身份世袭。', features: ['徭役征发', '匠籍制度'], source: '《宋史·食货志》' },
-            { year: '明朝初期', title: '军户屯田', era: '军事化组织', desc: '卫所制度下，军户兼负建筑修缮职责。', features: ['军户制度', '自给自足'], source: '《明实录》' },
-            { year: '明中后期', title: '民间工匠兴起', era: '市场化萌芽', desc: '民间建筑活动增多，出现专业工匠群体。', features: ['行会组织', '师徒传承'], source: '《广东通志》' },
-            { year: '清代', title: '物勒工名制', era: '质量追溯', desc: '城砖刻有工匠姓名戳记，实行质量责任制。', features: ['质量问责', '实名制砖'], source: '现存古城砖铭文' }
+            { year: '明代', title: '物勒工名追责制', era: '官营工匠', desc: '以城砖铭文为依据，建立监造官、窑户、工匠三级追责，砖有瑕疵则追责到底、监造官连坐。', features: ['徭役征发', '匠籍制度'], source: '1. 清光绪《崖州志・职官》：监造城池官，掌城砖烧制、砌筑之监查，砖有瑕疵，追究窑户、工匠，监造官连坐；2. 明代铭文城砖实物：砖不合格，窑户工匠问罪，监造官罚俸。' },
+            { year: '明清', title: '工役征调制', era: '军事化组织', desc: '明代军卒 + 民夫 + 窑户协同筑城；清代征调本地工匠，分工明确、按技任职。', features: ['军户制度', '自给自足'], source: '1. 明正德《琼台志・兵防》：筑城之役，军卒守砌，民夫运土、采石，窑户专司烧砖，各司其职，协同完工；2. 清光绪《崖州志・赋役》：修城工役，征调本地石匠、砖匠，按技分工，给以粮米，限期完工。' },
+            { year: '明代', title: '工匠分工制', era: '市场化萌芽', desc: '石匠、砖匠、夯土匠、木匠各司其职，分别负责采石砌基、烧砖砌筑、夯土城芯、制板造门。', features: ['行会组织', '师徒传承'], source: '1.《明代海南军屯与城池建设》：崖州筑城，工匠分工明确，石匠采石砌基，砖匠烧砖砌筑，夯土匠夯实城芯，木匠制板造门，缺一不可；2. 考古工具遗存报告：出土石凿、砖坯模、木夯等工具，对应不同工匠分工，印证分工制度。' }
         ],
         tool: [
-            { year: '宋元', title: '传统木工具', era: '基础工具集', desc: '使用锯、刨、凿、锤等传统木作工具。', features: ['手工制作', '铁器工具'], source: '《天工开物》' },
-            { year: '明代', title: '夯土工具改进', era: '专用设备', desc: '发展出专用的夯土器具，提高城墙施工效率。', features: ['夯具标准化', '分层夯实'], source: '《鲁班经》' },
-            { year: '明清', title: '测量工具', era: '精准定位', desc: '使用罗盘、水准仪等工具进行建筑定位和测量。', features: ['风水堪舆', '精密测量'], source: '《营造法原》' },
-            { year: '清代', title: '起重运输', era: '大型构件安装', desc: '使用滑轮、杠杆等原理搬运大型石料。', features: ['机械原理', '团队协作'], source: '工程实践记录' }
+            { year: '唐-宋初', title: '简易工具', era: '基础工具集', desc: '以木夯、石夯、版筑夹板、石凿为主，工具简易，适配纯夯土版筑。', features: ['手工制作', '铁器工具'], source: '1.《中国古代夯土筑城工具研究》：唐至宋初，夯土筑城多用木夯、石夯夯实，板为夹板，石凿采石，工具简易，适配纯土城营造；2.2010 考古发掘报告：出土石凿、木夯残件，石夯用于夯土，石凿用于开采火山岩。' },
+            { year: '南宋-元', title: '工具改进', era: '专用设备', desc: '新增小型砖窑、砖坯模、铜凿，适配砖土混构工艺。', features: ['夯具标准化', '分层夯实'], source: '1. 南宋《吉阳军修城志》：筑城用砖，设小型砖窑，制砖坯模，规范砖形，铜凿细琢砖石，适配砖土混构之法；2.《海南古代制砖工艺研究》：南宋至元代，崖州制砖用砖坯模，烧制用小型砖窑，铜凿用于砖石精细加工' },
+            { year: '明-清', title: '精细工具', era: '精准定位', desc: '铁錾、石锤、辘轳、官窑窑具、灰浆桶等工具，精细多样，适配砖石全包工艺。', features: ['风水堪舆', '精密测量'], source: '1. 清《工程做法则例》：明清筑城，铁錾琢石，石锤砌砖，辘轳运料，官窑窑具规范烧砖，灰浆桶运灰浆，工具精细，适配砖石全包工艺；2. 窑址考古遗存报告：出土官窑窑具、铁錾、石锤等实物，印证明清筑城工具使用。' }
         ],
         material: [
-            { year: '历代', title: '火山岩', era: '本地石材', desc: '海南岛广泛分布的玄武岩，质地坚硬耐腐蚀。', features: ['就地取材', '抗风化'], source: '地质调查报告' },
-            { year: '沿海地区', title: '蚝壳材料', era: '海洋资源', desc: '充分利用海洋生物资源，变废为宝。', features: ['生态环保', '资源循环'], source: '民居调查' },
-            { year: '山地', title: '木材来源', era: '森林资源', desc: '使用本地热带硬木如菠萝格、母生等。', features: ['优质硬木', '防腐耐用'], source: '《崖州志·物产志》' },
-            { year: '平原', title: '黏土与石灰', era: '基础建材', desc: '本地黏土烧制砖瓦，贝壳烧制石灰。', features: ['砖瓦生产', '石灰工艺'], source: '传统工艺调查' }
+            { year: '周边山体',title: '火山岩（玄武岩）', era: '本地石材', desc: '本地开采，用于城墙基脚、城门石构，采用错缝砌筑工艺；同时用于学宫台阶、石栏及广济桥桥基砌筑。', features: ['就地取材', '抗风化'], source: '1. 清光绪《崖州志》：基脚以石为之；2.2010 考古报告：出土石器含火山岩遗存，印证基脚石构砌筑方式；3. 清光绪《崖州志》：阶砌以石，栏楯皆火山岩，坚致耐用。' },
+            { year: '海边滩涂',title: '蚝壳材料', era: '海洋资源', desc: '从南海滩涂采集，经晒制切片后用于民居窗户砌筑，通风防潮，耐海风侵蚀。', features: ['生态环保', '资源循环'], source: '1.《海南传统民居营造技艺》：崖州沿海民居，多取蚝壳为窗，经晒制切片，嵌于墙体，通风防潮，耐海风侵蚀；2. 保平村民居考证：现存清代民居蚝壳窗，蚝壳排列整齐，切片规整，印证其营造工艺。' },
+            { year: '本地山林',title: '木材来源', era: '森林资源（杉木、松木）', desc: '取自海南本地山林，经防腐处理，用于学宫梁架、城门木构，杉木为梁、松木为门窗。', features: ['优质硬木', '防腐耐用'], source: '1. 清光绪《崖州志》：学宫正殿梁架用杉木，门窗以松木为之，经防腐处理，经久不腐；2. 明正德《琼台志》：崖州城门木构，采本地杉木，制为门扇、门轴，裹以铁皮，增强防御；3. 学宫考古报告：出土杉木梁架残件，表面有防腐处理痕迹，与史料记载一致。' },
+            { year: '统一烧制',title: '青砖', era: '基础建材', desc: '由州府官窑统一烧制，规格统一，用于城墙内外包砖、女墙砌筑等，部分城砖刻有窑户、工匠铭文。', features: ['砖瓦生产', '石灰工艺'], source: '1. 明正德《琼台志》：官窑烧砖，规制统一，砖文记窑户、工匠姓名；2. 明代铭文城砖实物：嘉靖十七年，窑户张三，工匠李四，监造官王五；3. 清光绪《崖州志》：学宫正殿墙体以青砖砌筑，脊砖规制统一，皆官窑所出。' },
+            { year: '古城沙土',title: '夯土生土', era: '基础建材', desc: '取自古城周边沙土，经筛选后分层夯实，作为城墙、学宫附属建筑墙体核心，遵循以板为模，填土夯实工艺。', features: ['砖瓦生产', '石灰工艺'], source: '1. 清光绪《崖州志》：崖州城芯以生土分层夯实，取城周沙土，筛去碎石，每层厚数寸，坚如磐石；2. 明人裴崇礼《吉阳军修城志・跋》：以板为模，填土夯实，层叠而上，不疏不松；3. 学宫考古报告：学宫偏殿墙体芯体为夯土，分层夯实痕迹明显，与故城城墙夯土工艺一致。'},
+            { year: '石灰糯米',title: '石灰糯米灰浆', era: '基础建材', desc: '以石灰、糯米汁、细沙搅拌而成，用于砖石缝隙粘合，经考古检测确认含糯米成分。', features: ['砖瓦生产', '石灰工艺'], source: '1. 清光绪《崖州志》：崖州城砖石砌筑，灰浆拌以糯米汁，粘合力强，耐海水侵蚀；2. 学宫考古检测报告：墙体灰浆样本检测含淀粉成分，印证使用糯米灰浆；3.《中国古代建筑灰浆工艺》：南方沿海地区常用石灰糯米灰浆，防潮抗腐蚀效果显著。' }
+        ],
+        bridgeWater: [
+            { year: '南宋-明清', title: '广济桥', era: '故城周边', desc: '南宋绍定间建，跨护城河、石基砖拱，石灰灰浆勾缝，桥面石板铺砌，明清修缮、民国损毁，现存桥基及部分拱券。', features: ['自然水源', '简易渠道'], source: '1. 清光绪《崖州志》：广济桥，宋绍定间建，跨护城河，石基砖拱，石灰灰浆勾缝，桥面石板铺砌，通城外要道；2. 广济桥遗址考据报告：广济桥桥基为火山岩，拱券为青砖，灰浆含糯米成分，与故城城墙工艺一致。' },
+            { year: '宋代', title: '后河', era: '人工河', desc: '后河南宋淳祐五年毛奎开凿，长八里，东三里引水、余用天然洼地，明清沿用、民国淤塞，2013 年清理遗址。', features: ['石拱结构', '交通枢纽'], source: '1. 南宋《吉阳军修城志》：淳祐五年，知军毛奎凿后河，绕城北，长八里，东三里引水，余用天然洼地，以利灌溉、防御；2. 明人裴崇礼跋文：后河开凿，引宁远河水，灌田护城，为崖州水利之要；3. 2013 年后河遗址考据报告：后河遗址主体清晰，东部引水段人工开凿痕迹明显。' },
+            { year: '明清', title: '古城护城河', era: '城市水系', desc: '护城河明清建、环绕古城，周回三里许、深五米，清代疏浚、民国填埋，现存西段。', features: ['环形水系', '防洪排涝'], source: '清光绪《崖州志》：护城河环绕古城，周回三里许，深五米，兼具防御、排水、灌溉之能。' },
+            { year: '明清', title: '城内四渠', era: '农田灌溉', desc: '城内四渠明清建、疏导雨水，合古城四漏之局，清代修缮，部分被覆盖。', features: ['人工渠道', '农田灌溉'], source: '1. 清光绪《崖州志》：城内排水渠四，分导雨水、生活用水，合古城四漏之局。' },
+            { year: '清代', title: '登云桥', era: '维护保养', desc: '清代建、砖石结构，通城外道路，民国局部改建、主体留存。', features: ['技术改进', '防灾减灾'], source: '1. 清光绪《崖州志》：登云桥，清时建，砖石结构，通城外道路。' }
         ]
     },
 
@@ -245,6 +400,7 @@ const MultiDimensionalTimeline = {
         if (!this.container || !this.wrapper) return;
 
         this.renderTimelineNodes();
+        this.unifyTrackWidths();
         this.bindDragEvents();
         this.bindScrollEvents();
         this.bindNavEvents();
@@ -252,8 +408,29 @@ const MultiDimensionalTimeline = {
         this.updateProgress();
     },
 
+    unifyTrackWidths() {
+        const tracks = this.wrapper.querySelectorAll('.timeline-track');
+        if (!tracks.length) return;
+        let maxContentWidth = 0;
+        tracks.forEach(track => {
+            const nodesContainer = track.querySelector('.track-nodes');
+            if (nodesContainer) {
+                const width = nodesContainer.scrollWidth;
+                if (width > maxContentWidth) maxContentWidth = width;
+            }
+        });
+        const uniformWidth = 140 + maxContentWidth;
+        tracks.forEach(track => {
+            track.style.width = `${uniformWidth}px`;
+            const line = track.querySelector('.track-line');
+            if (line) {
+                line.style.width = `${maxContentWidth}px`;
+            }
+        });
+    },
+
     renderTimelineNodes() {
-        const dimensions = ['dynasty', 'craft', 'artisan', 'tool', 'material'];
+        const dimensions = ['craft', 'artisan', 'tool', 'material', 'bridgeWater'];
 
         dimensions.forEach(dim => {
             const container = document.getElementById(`${dim}-nodes`);
@@ -430,23 +607,21 @@ const MultiDimensionalTimeline = {
 
         if (!data || !this.modal) return;
 
-        document.getElementById('modal-title').textContent = data.title;
-        document.getElementById('modal-era').textContent = data.era;
-        document.getElementById('modal-desc').textContent = data.desc;
-
-        // 图片区域（预留）
+        const titleEl = document.getElementById('modal-title');
+        const descEl = document.getElementById('modal-desc');
         const imageContainer = document.getElementById('modal-image');
-        imageContainer.innerHTML = '<div class="modal-image-placeholder">📷 实物图片待搜集</div>';
+        const sourceEl = document.getElementById('modal-source');
 
-        // 特性标签
-        const featuresContainer = document.getElementById('modal-features');
-        featuresContainer.innerHTML = data.features.map(f =>
-            `<span class="modal-feature-tag">${f}</span>`
-        ).join('');
+        if (titleEl) titleEl.textContent = data.title;
+        if (descEl) descEl.textContent = data.desc;
 
-        // 史料出处
-        document.getElementById('modal-source').innerHTML =
-            `<strong>史料出处：</strong>${data.source}`;
+        if (imageContainer) {
+            imageContainer.innerHTML = '<div class="modal-image-placeholder">📷 实物图片待搜集</div>';
+        }
+
+        if (sourceEl) {
+            sourceEl.innerHTML = `<strong>史料出处：</strong>${data.source}`;
+        }
 
         this.modal.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -484,10 +659,3 @@ const MultiDimensionalTimeline = {
         });
     }
 };
-
-// 更新初始化代码
-document.addEventListener('DOMContentLoaded', () => {
-    TechTabs.init();
-    WaterSystem.init();
-    MultiDimensionalTimeline.init();
-});

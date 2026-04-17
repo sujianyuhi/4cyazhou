@@ -300,8 +300,8 @@ const OfficialsTimeline = {
     },
 
     bindEvents() {
-        // 时间轴点击事件 - 垂直布局
-        const timelineItems = document.querySelectorAll('.timeline-item-vertical');
+        // 时间轴点击事件 - 横向布局
+        const timelineItems = document.querySelectorAll('.timeline-item-horizontal');
         timelineItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 this.updateDisplay(index);
@@ -325,6 +325,17 @@ const OfficialsTimeline = {
                 this.updateDisplay(newIndex);
             });
         }
+
+        // 键盘导航支持
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                const newIndex = this.currentIndex === 0 ? this.officialsList.length - 1 : this.currentIndex - 1;
+                this.updateDisplay(newIndex);
+            } else if (e.key === 'ArrowRight') {
+                const newIndex = this.currentIndex === this.officialsList.length - 1 ? 0 : this.currentIndex + 1;
+                this.updateDisplay(newIndex);
+            }
+        });
     },
 
     updateDisplay(index) {
@@ -334,17 +345,17 @@ const OfficialsTimeline = {
 
         if (!data) return;
 
-        // 更新时间轴高亮 - 垂直布局
-        const timelineItems = document.querySelectorAll('.timeline-item-vertical');
+        // 更新时间轴高亮 - 横向布局
+        const timelineItems = document.querySelectorAll('.timeline-item-horizontal');
         timelineItems.forEach((item, i) => {
             item.classList.toggle('active', i === index);
         });
 
-        // 更新垂直进度条
-        const progress = document.getElementById('timeline-progress-vertical');
+        // 更新横向进度条
+        const progress = document.getElementById('timeline-progress-horizontal');
         if (progress) {
-            const percentage = ((index + 1) / this.officialsList.length) * 100;
-            progress.style.height = `${percentage}%`;
+            const percentage = (index / (this.officialsList.length - 1)) * 100;
+            progress.style.width = `${percentage}%`;
         }
 
         // 更新指示器

@@ -153,11 +153,24 @@
     text-align: center;
     cursor: pointer;
     padding: 0.75rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .timeline-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px) scale(1.05);
+}
+
+.timeline-item:hover .timeline-dot {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(139, 69, 19, 0.4);
+}
+
+.timeline-item:hover .timeline-year {
+    color: var(--color-ochre);
+}
+
+.timeline-item:active {
+    transform: translateY(-4px) scale(0.98);
 }
 
 .timeline-dot {
@@ -167,13 +180,33 @@
     border: 4px solid var(--color-ochre);
     border-radius: 50%;
     margin: 0 auto 0.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+}
+
+.timeline-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--color-ochre);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
 }
 
 .timeline-item.active .timeline-dot {
     background: var(--color-ochre);
-    box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
+    box-shadow: 0 0 20px rgba(139, 69, 19, 0.6),
+                0 0 40px rgba(139, 69, 19, 0.3);
+    transform: scale(1.15);
+}
+
+.timeline-item.active .timeline-dot::after {
+    transform: translate(-50%, -50%) scale(1);
+    background: var(--color-white);
 }
 
 .timeline-year {
@@ -181,6 +214,13 @@
     font-weight: 600;
     color: var(--color-ink);
     font-size: var(--text-base);
+    transition: color 0.3s ease,
+                transform 0.3s ease;
+}
+
+.timeline-item.active .timeline-year {
+    color: var(--color-ochre);
+    transform: scale(1.05);
 }
 
 .timeline-period {
@@ -188,6 +228,11 @@
     font-size: var(--text-xs);
     color: var(--color-stone);
     margin-top: 0.25rem;
+    transition: opacity 0.3s ease;
+}
+
+.timeline-item.active .timeline-period {
+    opacity: 0.7;
 }
 
 .era-display {
@@ -195,17 +240,56 @@
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.era-display.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.era-display.transitioning {
+    pointer-events: none;
 }
 
 .era-image {
     border-radius: var(--radius-md);
     overflow: hidden;
+    opacity: 0;
+    transform: translateX(-30px) scale(0.95);
+    transition: opacity 0.6s ease-out 0.1s,
+                transform 0.6s ease-out 0.1s;
+}
+
+.era-display.visible .era-image {
+    opacity: 1;
+    transform: translateX(0) scale(1);
 }
 
 .era-image img {
     width: 100%;
     height: 300px;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.era-display.visible .era-image:hover img {
+    transform: scale(1.05);
+}
+
+.era-info {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.6s ease-out 0.2s,
+                transform 0.6s ease-out 0.2s;
+}
+
+.era-display.visible .era-info {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .era-info h3 {
@@ -213,18 +297,45 @@
     font-size: var(--text-2xl);
     color: var(--color-ochre);
     margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease-out 0.3s,
+                transform 0.5s ease-out 0.3s;
+}
+
+.era-display.visible .era-info h3 {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .era-info p {
     color: var(--color-stone);
     line-height: 1.8;
     margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease-out 0.4s,
+                transform 0.5s ease-out 0.4s;
+}
+
+.era-display.visible .era-info p {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .era-features {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease-out 0.5s,
+                transform 0.5s ease-out 0.5s;
+}
+
+.era-display.visible .era-features {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .feature-tag {
@@ -234,6 +345,24 @@
     font-size: var(--text-sm);
     border-radius: 50px;
     border: 1px solid var(--color-ochre);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease-out,
+                transform 0.3s ease-out,
+                background 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.era-display.visible .feature-tag {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.feature-tag:hover {
+    background: var(--color-ochre);
+    color: var(--color-white);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+    transform: scale(1.05);
 }
 
 /* ===== 选址智慧 ===== */
@@ -337,7 +466,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    align-items: center;
+    width: 100%;
 }
 
 .layout-diagram {
@@ -350,21 +479,21 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 500px;
 }
 
 .layout-image {
-    width: auto;
-    height: 400px;
+    width: 100%;
+    height: auto;
+    max-height: 600px;
     object-fit: contain;
     transform: rotate(90deg);
 }
 
 .layout-features {
-    flex: 1;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    width: 100%;
 }
 
 .layout-card {
@@ -1249,7 +1378,7 @@
     align-items: flex-start;
     margin-bottom: 2.5rem;
     position: relative;
-    min-width: max-content;
+    width: 100%;
 }
 
 .track-label {
@@ -1272,7 +1401,7 @@
     position: absolute;
     top: 1.25rem;
     left: 140px;
-    right: 0;
+    width: 100%;
     height: 2px;
     background: linear-gradient(90deg,
         var(--color-ochre) 0%,
@@ -1375,6 +1504,8 @@
 .tool-track .node-dot::before { background: #A0522D; }
 .material-track .node-dot { border-color: #DEB887; }
 .material-track .node-dot::before { background: #DEB887; }
+.bridge-water-track .node-dot { border-color: #4682B4; }
+.bridge-water-track .node-dot::before { background: #4682B4; }
 
 .timeline-nav {
     display: flex;
@@ -1543,15 +1674,6 @@
     margin-bottom: 0.5rem;
 }
 
-.modal-era {
-    display: inline-block;
-    padding: 0.35rem 1rem;
-    background: var(--color-gold);
-    color: var(--color-white);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    border-radius: 50px;
-}
 
 .modal-body {
     padding: 2rem;
@@ -1721,5 +1843,402 @@
 
     .modal-title {
         font-size: var(--text-xl);
+    }
+}
+
+/* ===== 崖城学宫部分 ===== */
+.yacheng-xuegong-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, #fffef9, #f5f0e6);
+}
+
+.xuegong-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 320px 180px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.xuegong-image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--color-white);
+}
+
+.xuegong-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.xuegong-image:hover img {
+    transform: scale(1.03);
+}
+
+.image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(45, 35, 25, 0.9), transparent);
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    text-align: center;
+    font-family: var(--font-serif);
+}
+
+.xuegong-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom,
+        var(--color-ochre) 0%,
+        var(--color-gold) 50%,
+        var(--color-ochre) 100%
+    );
+    transform: translateX(-50%);
+    border-radius: 2px;
+    opacity: 0.4;
+}
+
+.timeline-nodes {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.xg-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 8px 8px 8px 0;
+    transition: all 0.3s ease;
+    border-radius: var(--radius-sm);
+    position: relative;
+}
+
+.xg-node:hover {
+    transform: translateX(4px);
+}
+
+.xg-node .node-dot {
+    width: 16px;
+    height: 16px;
+    background: var(--color-white);
+    border: 3px solid var(--color-ochre);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.xg-node .node-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: var(--color-ochre);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.xg-node:hover .node-dot {
+    border-color: var(--color-gold);
+    box-shadow: 0 4px 14px rgba(218, 165, 32, 0.4);
+    transform: scale(1.15);
+}
+
+.xg-node.active .node-dot {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.6);
+    transform: scale(1.25);
+}
+
+.xg-node.active .node-dot::after {
+    background: var(--color-white);
+}
+
+.node-text {
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    font-weight: 500;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.xg-node:hover .node-text {
+    color: var(--color-ochre);
+}
+
+.xg-node.active .node-text {
+    color: var(--color-gold);
+    font-weight: 700;
+}
+
+.xuegong-info-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.xuegong-info-card.active {
+    border-color: var(--color-gold);
+    box-shadow: 0 10px 40px rgba(218, 165, 32, 0.2);
+}
+
+.info-card-header {
+    padding: 1.75rem 2rem 1.25rem;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.06), rgba(218, 165, 32, 0.06));
+    border-bottom: 2px solid rgba(139, 69, 19, 0.1);
+}
+
+.info-card-header h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    color: var(--color-ochre);
+    margin: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.info-card-header h3::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-gold), transparent);
+    border-radius: 2px;
+}
+
+.info-card-body {
+    padding: 1.75rem 2rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.info-card-body p {
+    color: var(--color-stone);
+    line-height: 1.85;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    font-size: var(--text-base);
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.04), rgba(218, 165, 32, 0.04));
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-gold);
+    transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.08), rgba(218, 165, 32, 0.08));
+    transform: translateX(4px);
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--color-ochre);
+    font-size: var(--text-sm);
+}
+
+.detail-value {
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+}
+
+/* 信息卡片切换动画 */
+.card-fade-in {
+    animation: cardFadeIn 0.4s ease;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式 - 平板 */
+@media (max-width: 1100px) {
+    .xuegong-container {
+        grid-template-columns: 260px 160px 1fr;
+        gap: 1.5rem;
+    }
+
+    .xuegong-image img {
+        height: 420px;
+    }
+
+    .xuegong-info-card {
+        min-height: 420px;
+    }
+
+    .timeline-nodes {
+        gap: 1.5rem;
+    }
+
+    .node-text {
+        font-size: var(--text-xs);
+    }
+}
+
+/* 响应式 - 手机横屏/小平板 */
+@media (max-width: 900px) {
+    .xuegong-container {
+        grid-template-columns: 220px 140px 1fr;
+        gap: 1.25rem;
+    }
+
+    .xuegong-image img {
+        height: 360px;
+    }
+
+    .xuegong-info-card {
+        min-height: 360px;
+    }
+
+    .info-card-header {
+        padding: 1.25rem 1.5rem 1rem;
+    }
+
+    .info-card-header h3 {
+        font-size: var(--text-xl);
+    }
+
+    .info-card-body {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+}
+
+/* 响应式 - 手机竖屏 */
+@media (max-width: 768px) {
+    .yacheng-xuegong-section {
+        padding: 4rem 1rem;
+    }
+
+    .xuegong-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .xuegong-image {
+        order: 1;
+    }
+
+    .xuegong-image img {
+        height: 280px;
+    }
+
+    .xuegong-timeline {
+        order: 2;
+        flex-direction: row;
+        padding: 1rem 0;
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .timeline-line {
+        top: 50%;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: auto;
+        height: 3px;
+        transform: translateY(-50%);
+    }
+
+    .timeline-nodes {
+        flex-direction: row;
+        gap: 0.75rem;
+        justify-content: flex-start;
+        width: max-content;
+        padding: 0 0.5rem;
+    }
+
+    .xg-node {
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px 8px;
+        text-align: center;
+    }
+
+    .xg-node:hover {
+        transform: translateY(-4px);
+    }
+
+    .node-text {
+        white-space: normal;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .xuegong-info-card {
+        order: 3;
+        min-height: auto;
+    }
+
+    .card-details {
+        gap: 0.75rem;
+    }
+
+    .detail-item {
+        padding: 0.75rem 1rem;
     }
 }

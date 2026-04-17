@@ -140,72 +140,12 @@
         </div>
     </section>
 
-    <section class="content-section">
-        <div class="container">
-            <div class="section-header scroll-reveal">
-                <span class="section-tag">核心技艺</span>
-                <h2 class="section-title">传统营造技艺</h2>
-                <p class="section-subtitle">中原技艺与本地材料的完美融合</p>
-            </div>
-            
-            <div class="tech-tabs scroll-reveal">
-                <button class="tech-tab active" data-tech="wall">火山岩砌筑</button>
-                <button class="tech-tab" data-tech="window">蚝壳窗</button>
-                <button class="tech-tab" data-tech="bridge">广济桥</button>
-            </div>
-            
-            <div class="tech-display scroll-reveal">
-                <div class="tech-panel active" id="tech-wall">
-                    <div class="tech-image">
-                        <img src="../images/content/wall-structure.jpg" alt="火山岩砌筑">
-                    </div>
-                    <div class="tech-info">
-                        <h3>火山岩砌筑技艺</h3>
-                        <p>崖州古城城墙大量使用本地火山岩砌筑，形成独特的"灰黑城墙"景观。城砖刻有铭文戳记，体现"物勒工名"的工程质量制度。</p>
-                        <div class="tech-features">
-                            <span class="feature-tag">就地取材</span>
-                            <span class="feature-tag">物勒工名</span>
-                            <span class="feature-tag">夯土核心</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="tech-panel" id="tech-window">
-                    <div class="tech-image">
-                        <img src="../images/content/oyster-window.jpg" alt="蚝壳窗">
-                    </div>
-                    <div class="tech-info">
-                        <h3>蚝壳窗热带适配</h3>
-                        <p>民居中巧用蚝壳薄片作为窗棂，这种材料既通风透光，又能有效抵御台风侵蚀，是适应热带气候的创新智慧。</p>
-                        <div class="tech-features">
-                            <span class="feature-tag">通风透光</span>
-                            <span class="feature-tag">抗台风</span>
-                            <span class="feature-tag">就地取材</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="tech-panel" id="tech-bridge">
-                    <div class="tech-image">
-                        <img src="../images/content/guangji-bridge.jpg" alt="广济桥">
-                    </div>
-                    <div class="tech-info">
-                        <h3>石拱桥营造技艺</h3>
-                        <p>广济桥始建于明景泰年间，清康熙九年(1670年)重修为砖石桥。单孔拱券结构，长15米，宽4.5米，拱高4.76米，屹立三个半世纪。</p>
-                        <div class="tech-features">
-                            <span class="feature-tag">单孔拱券</span>
-                            <span class="feature-tag">驿道配套</span>
-                            <span class="feature-tag">灌渠相依</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 多维度时间轴 -->
     <section class="timeline-section">
-        <div class="timeline-header">
-            <h2 class="timeline-title">营造技艺历史演变</h2>
-            <p class="timeline-subtitle">横跨千年的建筑智慧传承</p>
+        <div class="section-header scroll-reveal">
+            <span class="section-tag">核心技艺</span>
+            <h2 class="section-title">营造技艺历史演变</h2>
+            <p class="section-subtitle">横跨千年的建筑智慧传承</p>
         </div>
 
         <div class="timeline-container" id="timeline-container">
@@ -216,16 +156,9 @@
 
             <!-- 时间轴主体 -->
             <div class="timeline-wrapper" id="timeline-wrapper">
-                <!-- 朝代维度 -->
-                <div class="timeline-track dynasty-track">
-                    <div class="track-label">朝代</div>
-                    <div class="track-line"></div>
-                    <div class="track-nodes" id="dynasty-nodes"></div>
-                </div>
-
                 <!-- 工艺维度 -->
                 <div class="timeline-track craft-track">
-                    <div class="track-label">工艺</div>
+                    <div class="track-label">建筑工艺</div>
                     <div class="track-line"></div>
                     <div class="track-nodes" id="craft-nodes"></div>
                 </div>
@@ -249,6 +182,13 @@
                     <div class="track-label">材料来源</div>
                     <div class="track-line"></div>
                     <div class="track-nodes" id="material-nodes"></div>
+                </div>
+
+                <!-- 桥梁水利维度 -->
+                <div class="timeline-track bridge-water-track">
+                    <div class="track-label">桥梁水利</div>
+                    <div class="track-line"></div>
+                    <div class="track-nodes" id="bridgeWater-nodes"></div>
                 </div>
             </div>
 
@@ -283,8 +223,83 @@
                 <div class="modal-body">
                     <div class="modal-image" id="modal-image"></div>
                     <div class="modal-desc" id="modal-desc"></div>
-                    <div class="modal-features" id="modal-features"></div>
                     <div class="modal-source" id="modal-source"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 崖城学宫部分 -->
+    <section class="yacheng-xuegong-section">
+        <div class="section-header scroll-reveal">
+            <span class="section-tag">建筑典范</span>
+            <h2 class="section-title">崖城学宫</h2>
+            <p class="section-subtitle">琼南地区规模最大、保存最完整的孔庙建筑群</p>
+        </div>
+
+        <div class="xuegong-container">
+            <!-- 左侧：图片 -->
+            <div class="xuegong-image">
+                <img src="../images/content/xuegong-main.jpg" alt="崖城学宫" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22500%22%3E%3Crect fill=%22%23e8e0d0%22 width=%22100%25%22 height=%22100%25%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2216%22%3E崖城学宫%3C/text%3E%3C/svg%3E'">
+                <div class="image-caption">崖城学宫全景</div>
+            </div>
+
+            <!-- 中间：纵向脉络轴 -->
+            <div class="xuegong-timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-nodes">
+                    <div class="xg-node active" data-index="0">
+                        <div class="node-dot"></div>
+                        <span class="node-text">始建与变迁</span>
+                    </div>
+                    <div class="xg-node" data-index="1">
+                        <div class="node-dot"></div>
+                        <span class="node-text">整体布局与<br>建筑风格</span>
+                    </div>
+                    <div class="xg-node" data-index="2">
+                        <div class="node-dot"></div>
+                        <span class="node-text">主体构造</span>
+                    </div>
+                    <div class="xg-node" data-index="3">
+                        <div class="node-dot"></div>
+                        <span class="node-text">内部设计</span>
+                    </div>
+                    <div class="xg-node" data-index="4">
+                        <div class="node-dot"></div>
+                        <span class="node-text">建筑装饰<br>— 柱础</span>
+                    </div>
+                    <div class="xg-node" data-index="5">
+                        <div class="node-dot"></div>
+                        <span class="node-text">建筑装饰<br>— 脊饰</span>
+                    </div>
+                    <div class="xg-node" data-index="6">
+                        <div class="node-dot"></div>
+                        <span class="node-text">建筑装饰<br>— 门窗</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：信息卡片 -->
+            <div class="xuegong-info-card" id="xuegong-info-card">
+                <div class="info-card-header">
+                    <h3 id="xg-card-title">始建与变迁</h3>
+                </div>
+                <div class="info-card-body" id="xg-card-body">
+                    <p>崖城学宫始建于北宋庆历四年（1044年），历经宋、元、明、清四代修缮扩建，是海南现存最完整、规模最大的孔庙建筑群。南宋淳祐年间迁建于今址，明清两代多次重修，形成今日之格局。</p>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-label">始建年代</span>
+                            <span class="detail-value">北宋庆历四年（1044年）</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">迁建时间</span>
+                            <span class="detail-value">南宋淳祐年间</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">历史地位</span>
+                            <span class="detail-value">海南第一庙</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

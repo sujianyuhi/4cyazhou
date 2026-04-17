@@ -40,6 +40,9 @@ const Timeline = {
         
         if (!this.items.length || !this.display) return;
         
+        // 初始化显示状态
+        this.display.classList.add('visible');
+        
         this.bindEvents();
     },
 
@@ -56,6 +59,15 @@ const Timeline = {
         const data = this.eraData[era];
         if (!data) return;
 
+        // 防止重复点击和动画冲突
+        if (this.display.classList.contains('transitioning')) return;
+
+        // 标记正在过渡
+        this.display.classList.add('transitioning');
+
+        // 移除可见类,触发淡出动画
+        this.display.classList.remove('visible');
+
         // 更新时间轴状态
         this.items.forEach(item => {
             item.classList.remove('active');
@@ -64,25 +76,35 @@ const Timeline = {
             }
         });
 
-        // 更新显示内容
-        this.display.innerHTML = `
-            <div class="era-image">
-                <img src="${data.image}" alt="${data.title}">
-            </div>
-            <div class="era-info">
-                <h3>${data.title}</h3>
-                <p>${data.description}</p>
-                <div class="era-features">
-                    ${data.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
-                </div>
-            </div>
-        `;
-
-        // 添加淡入动画
-        this.display.style.opacity = '0';
+        // 等待淡出完成后更新内容
         setTimeout(() => {
-            this.display.style.opacity = '1';
-        }, 50);
+            // 更新显示内容
+            this.display.innerHTML = `
+                <div class="era-image">
+                    <img src="${data.image}" alt="${data.title}">
+                </div>
+                <div class="era-info">
+                    <h3>${data.title}</h3>
+                    <p>${data.description}</p>
+                    <div class="era-features">
+                        ${data.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            // 强制重绘以确保过渡生效
+            void this.display.offsetWidth;
+
+            // 添加可见类,触发淡入动画
+            requestAnimationFrame(() => {
+                this.display.classList.add('visible');
+            });
+
+            // 动画完成后移除transitioning标记
+            setTimeout(() => {
+                this.display.classList.remove('transitioning');
+            }, 700);
+        }, 400);
     }
 };
 
