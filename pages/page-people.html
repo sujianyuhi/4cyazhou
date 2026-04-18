@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link rel="stylesheet" href="../css/officials-timeline.css">
+    <link rel="stylesheet" href="../css/officials-wheel.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -135,146 +136,97 @@
         </div>
     </section>
 
-    <section class="officials-timeline-section" id="officials-timeline">
+    <section class="officials-wheel-section" id="officials-wheel">
         <div class="container">
             <div class="section-header scroll-reveal">
                 <span class="section-tag">贬官文化</span>
                 <h2 class="section-title">崖州八大丞相</h2>
-                <p class="section-subtitle">中原文化的南疆传播者 · 点击探索历史人物</p>
+                <p class="section-subtitle">中原文化的南疆传播者 · 点击转盘探索历史人物</p>
             </div>
             
-            <div class="timeline-wrapper-horizontal scroll-reveal">
-                <!-- 顶部横向时间轴导航 -->
-                <div class="timeline-header-horizontal">
-                    <div class="timeline-track-horizontal">
-                        <div class="timeline-progress-horizontal" id="timeline-progress-horizontal"></div>
-                        <div class="timeline-line-horizontal"></div>
-                        <div class="timeline-items-horizontal">
-                            <div class="timeline-item-horizontal active" data-official="hanyuan" data-index="0">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">唐高宗时期</span>
-                                    <span class="timeline-name-horizontal">韩瑗</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="cuiyuanzong" data-index="1">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">武则天时期</span>
-                                    <span class="timeline-name-horizontal">崔元综</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="yangyan" data-index="2">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">唐德宗时期</span>
-                                    <span class="timeline-name-horizontal">杨炎</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="weizhiyi" data-index="3">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">唐顺宗时期</span>
-                                    <span class="timeline-name-horizontal">韦执谊</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="luduoxun" data-index="4">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">北宋开国</span>
-                                    <span class="timeline-name-horizontal">卢多逊</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="dingwei" data-index="5">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">北宋三朝</span>
-                                    <span class="timeline-name-horizontal">丁谓</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="zhaoding" data-index="6">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">南宋高宗</span>
-                                    <span class="timeline-name-horizontal">赵鼎</span>
-                                </div>
-                            </div>
-                            
-                            <div class="timeline-item-horizontal" data-official="wangshixi" data-index="7">
-                                <div class="timeline-dot-horizontal"></div>
-                                <div class="timeline-info-horizontal">
-                                    <span class="timeline-era-horizontal">元朝</span>
-                                    <span class="timeline-name-horizontal">王仕熙</span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="officials-wheel-container scroll-reveal">
+                <!-- 左侧转盘区域 -->
+                <div class="wheel-area">
+                    <div class="wheel-title">
+                        <h3>八大丞相转盘</h3>
+                        <p>点击人物头像查看详情</p>
                     </div>
-                </div>
-                
-                <!-- 下方人物详情展示 -->
-                <div class="officials-display" id="officials-display">
-                    <div class="display-content">
-                        <div class="display-portrait">
-                            <img src="../images/humanity/chengxiang/hanyuan.png" alt="韩瑗" id="display-portrait">
-                            <div class="portrait-frame"></div>
+                    
+                    <div class="wheel-wrapper" id="wheel-wrapper">
+                        <!-- 转盘外圈 -->
+                        <div class="wheel-outer-ring"></div>
+                        <!-- 转盘内圈背景 -->
+                        <div class="wheel-inner-bg"></div>
+                        
+                        <!-- 转盘人物节点容器 -->
+                        <div class="wheel-items-container" id="wheel-items-container">
+                            <!-- 人物节点将通过JS动态生成 -->
                         </div>
                         
-                        <div class="display-info">
-                            <div class="display-header">
-                                <span class="display-era" id="display-era">唐高宗时期</span>
-                                <h3 class="display-name" id="display-name">韩瑗</h3>
-                                <p class="display-title" id="display-title">唐高宗时期的宰相</p>
-                                <p class="display-period" id="display-period">606-659</p>
-                            </div>
-                            
-                            <div class="display-body">
-                                <div class="display-section">
-                                    <h4><span class="section-icon">📜</span>人物背景</h4>
-                                    <p id="display-background">韩瑗出身贵族名门，学识渊博、才华横溢。唐永徽四年(653)，韩瑗官拜同中书门三品，后晋升为侍中并兼任太子宾客。当时，唐高宗打算废黜王皇后，改立武昭仪(武则天)，这一举措遭到长孙无忌、褚遂良等佐命大臣的极力反对。韩瑗进谏劝阻，还为被贬的褚遂良进行辩护，此举激怒了唐高宗和武则天。显庆二年(657)，韩瑗被罢相，并贬为振州刺史，在治所崖城居住，他也是被贬至琼州的首位宰相。</p>
-                                </div>
-                                
-                                <!-- 成就配图展示区 -->
-                                <div class="display-section achievement-image-section" id="achievement-section" style="display: none;">
-                                    <h4><span class="section-icon">🖼️</span>成就遗迹</h4>
-                                    <div class="achievement-image-wrapper">
-                                        <img id="achievement-image" src="" alt="成就配图">
-                                        <div class="achievement-caption" id="achievement-caption"></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="display-section">
-                                    <h4><span class="section-icon">✨</span>人物贡献</h4>
-                                    <div class="contributions-grid" id="display-contributions"></div>
-                                </div>
-                            </div>
+                        <!-- 转盘中心人物肖像 -->
+                        <div class="wheel-center">
+                            <img src="../images/humanity/chengxiang/hanyuan.png" alt="韩瑗" class="wheel-center-portrait" id="wheel-center-portrait">
                         </div>
                     </div>
                     
-                    <!-- 导航按钮 -->
-                    <div class="display-nav">
-                        <button class="nav-btn prev" id="prev-btn">
+                    <!-- 转盘控制按钮 -->
+                    <div class="wheel-controls">
+                        <button class="wheel-nav-btn" id="wheel-prev-btn" title="上一位">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M15 18l-6-6 6-6"/>
                             </svg>
-                            <span>上一位</span>
                         </button>
-                        <div class="nav-indicator">
-                            <span id="current-index">1</span>
-                            <span class="separator">/</span>
-                            <span id="total-count">8</span>
+                        <div class="wheel-indicator">
+                            <span class="current" id="wheel-current">1</span>
+                            <span>/</span>
+                            <span id="wheel-total">8</span>
                         </div>
-                        <button class="nav-btn next" id="next-btn">
-                            <span>下一位</span>
+                        <button class="wheel-nav-btn" id="wheel-next-btn" title="下一位">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 18l6-6-6-6"/>
                             </svg>
                         </button>
+                    </div>
+                </div>
+                
+                <!-- 右侧信息展示区 -->
+                <div class="info-area">
+                    <!-- 人物简介卡片 -->
+                    <div class="official-intro-card" id="official-intro-card">
+                        <div class="official-intro-header">
+                            <div class="official-name-section">
+                                <span class="official-era-badge" id="official-era">唐高宗时期</span>
+                                <h3 class="official-name" id="official-name">韩瑗</h3>
+                                <p class="official-title" id="official-title">唐高宗时期的宰相</p>
+                                <p class="official-period" id="official-period">606-659</p>
+                            </div>
+                        </div>
+                        <div class="official-background" id="official-background">
+                            韩瑗出身贵族名门，学识渊博、才华横溢。唐永徽四年(653)，韩瑗官拜同中书门三品，后晋升为侍中并兼任太子宾客。当时，唐高宗打算废黜王皇后，改立武昭仪(武则天)，这一举措遭到长孙无忌、褚遂良等佐命大臣的极力反对。韩瑗进谏劝阻，还为被贬的褚遂良进行辩护，此举激怒了唐高宗和武则天。显庆二年(657)，韩瑗被罢相，并贬为振州刺史，在治所崖城居住，他也是被贬至琼州的首位宰相。
+                        </div>
+                    </div>
+                    
+                    <!-- 人物贡献区域 -->
+                    <div class="official-contributions-section" id="official-contributions-section">
+                        <div class="official-contributions-header">
+                            <span class="contributions-icon">✨</span>
+                            <h4>人物贡献</h4>
+                        </div>
+                        <div class="contributions-grid" id="contributions-grid">
+                            <!-- 贡献内容将通过JS动态生成 -->
+                        </div>
+                        
+                        <!-- 成就配图展示区 -->
+                        <div class="achievement-showcase" id="achievement-showcase" style="display: none;">
+                            <div class="achievement-showcase-header">
+                                <span>🖼️</span>
+                                <h4>成就遗迹</h4>
+                            </div>
+                            <div class="achievement-image-container">
+                                <img id="achievement-image" src="" alt="成就配图">
+                                <div class="achievement-caption" id="achievement-caption"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -409,7 +361,7 @@
     </footer>
 
     <script src="../js/global.js"></script>
-    <script src="../js/officials-timeline.js"></script>
+    <script src="../js/officials-wheel.js"></script>
     <script src="../js/people.js"></script>
 </body>
 </html>
