@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/pages.css">
     <link rel="stylesheet" href="../css/officials-timeline.css">
     <link rel="stylesheet" href="../css/officials-wheel.css">
+    <link rel="stylesheet" href="../css/people-interactions.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -280,12 +281,96 @@
         </div>
     </section>
 
+    <!-- 人物关系图谱 -->
+    <section class="relation-graph-section" id="relation-graph">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">文脉相连</span>
+                <h2 class="section-title">人物关系图谱</h2>
+                <p class="section-subtitle">点击节点探索历史人物之间的渊源与关联</p>
+            </div>
+            <div class="relation-graph-container scroll-reveal">
+                <div class="relation-canvas-wrapper">
+                    <canvas id="relation-canvas"></canvas>
+                    <div class="relation-tooltip" id="relation-tooltip"></div>
+                </div>
+                <div class="relation-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #8B4513;"></span>
+                        <span>唐代丞相</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #D2691E;"></span>
+                        <span>宋代丞相</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #CD853F;"></span>
+                        <span>元代名士</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #2F5D7A;"></span>
+                        <span>历史名人</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 时空对话模拟器 -->
+    <!-- 诗词飞花令 -->
+    <section class="poetry-ink-section" id="poetry-ink">
+        <div class="ink-bg">
+            <canvas id="ink-particle-canvas"></canvas>
+            <div class="ink-moon"></div>
+            <div class="ink-mist ink-mist-1"></div>
+            <div class="ink-mist ink-mist-2"></div>
+            <div class="ink-mist ink-mist-3"></div>
+        </div>
+        <div class="container ink-container">
+            <div class="section-header scroll-reveal ink-header">
+                <span class="section-tag ink-tag">诗韵流芳</span>
+                <h2 class="section-title ink-title">水墨诗境</h2>
+                <p class="section-subtitle ink-subtitle">轻触墨韵光球，唤醒沉睡千年的诗句</p>
+            </div>
+            
+            <div class="ink-orbs scroll-reveal" id="ink-orbs">
+                <!-- 墨韵光球由JS生成 -->
+            </div>
+        </div>
+
+        <!-- 全屏诗卷弹层 -->
+        <div class="ink-poem-overlay" id="ink-poem-overlay">
+            <div class="ink-poem-backdrop"></div>
+            <div class="ink-poem-scroll">
+                <button class="ink-poem-close" id="ink-poem-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="ink-scroll-paper">
+                    <div class="ink-scroll-top-rod"></div>
+                    <div class="ink-scroll-content">
+                        <div class="ink-scroll-seal"></div>
+                        <h3 class="ink-poem-title" id="ink-poem-title"></h3>
+                        <p class="ink-poem-author" id="ink-poem-author"></p>
+                        <div class="ink-poem-divider"></div>
+                        <div class="ink-poem-body" id="ink-poem-body"></div>
+                        <div class="ink-poem-divider"></div>
+                        <p class="ink-poem-note" id="ink-poem-note"></p>
+                    </div>
+                    <div class="ink-scroll-bottom-rod"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="history-figures-section bg-light" id="history-figures">
         <div class="container">
             <div class="section-header scroll-reveal">
                 <span class="section-tag">历史名人</span>
                 <h2 class="section-title">四大历史人物</h2>
-                <p class="section-subtitle">推动崖州文明发展的重要人物</p>
+                <p class="section-subtitle">推动崖州文明发展的重要人物 · 点击卡片开启时空对话</p>
             </div>
             
             <div class="history-figures-grid scroll-reveal">
@@ -307,6 +392,10 @@
                                 <p>总结出"错纱、配色、综线、累花"等织造技术，推动淞江发展为全国棉织业中心，被誉为"衣被半天下"</p>
                             </div>
                         </div>
+                        <button class="figure-dialogue-btn" data-character="huangdaopo">
+                            <span class="dialogue-btn-icon">💬</span>
+                            <span>与黄道婆对话</span>
+                        </button>
                     </div>
                 </div>
                 
@@ -328,6 +417,10 @@
                                 <p>维护国家统一，促进民族团结，被尊为"岭南圣母"，是海南历史上最重要的女性政治家</p>
                             </div>
                         </div>
+                        <button class="figure-dialogue-btn" data-character="xianfuren">
+                            <span class="dialogue-btn-icon">💬</span>
+                            <span>与冼夫人对话</span>
+                        </button>
                     </div>
                 </div>
                 
@@ -349,6 +442,10 @@
                                 <p>为官27载，历任翰林院编修、宁国府推官、钦差总提督仓场户部右侍郎等职，政绩显著，官声远扬</p>
                             </div>
                         </div>
+                        <button class="figure-dialogue-btn" data-character="zhongfang">
+                            <span class="dialogue-btn-icon">💬</span>
+                            <span>与钟芳对话</span>
+                        </button>
                     </div>
                 </div>
                 
@@ -370,11 +467,41 @@
                                 <p>虽未直接长居崖州，但在江西、广西等地平乱时与崖州籍名臣钟芳多有交集，二人思想碰撞，共同推动明代学术多元发展</p>
                             </div>
                         </div>
+                        <button class="figure-dialogue-btn" data-character="wangyangming">
+                            <span class="dialogue-btn-icon">💬</span>
+                            <span>与王阳明对话</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- 对话弹层 -->
+    <div class="dialogue-overlay" id="dialogue-overlay">
+        <div class="dialogue-overlay-backdrop"></div>
+        <div class="dialogue-overlay-content">
+            <button class="dialogue-overlay-close" id="dialogue-overlay-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="dialogue-overlay-inner">
+                <div class="dialogue-chat-panel" style="width: 100%;">
+                    <div class="dialogue-messages" id="overlay-dialogue-messages">
+                        <div class="dialogue-welcome">
+                            <div class="ancient-paper">
+                                <p class="welcome-text" id="overlay-welcome-text"></p>
+                                <div class="paper-seal" id="overlay-paper-seal"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dialogue-questions" id="overlay-dialogue-questions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="footer-content">
@@ -410,5 +537,6 @@
     <script src="../js/global.js"></script>
     <script src="../js/officials-wheel.js"></script>
     <script src="../js/people.js"></script>
+    <script src="../js/people-interactions.js"></script>
 </body>
 </html>

@@ -1,0 +1,1387 @@
+/**
+ * 人·人文之脉 - 创意交互样式
+ * 包含：人物关系图谱、时空对话模拟器、诗词飞花令
+ */
+
+/* ===== 人物关系图谱 ===== */
+.relation-graph-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, #f8f6f1 0%, #fffef9 100%);
+}
+
+.relation-graph-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.relation-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.03) 0%, rgba(201, 169, 97, 0.05) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(139, 69, 19, 0.1);
+    overflow: hidden;
+}
+
+.relation-canvas-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b4513' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+#relation-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.relation-tooltip {
+    position: absolute;
+    padding: 8px 14px;
+    background: rgba(45, 35, 25, 0.95);
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+    white-space: nowrap;
+}
+
+.relation-tooltip.show {
+    opacity: 1;
+}
+
+.relation-tooltip strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.relation-tooltip span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.relation-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 14px;
+    color: var(--color-stone);
+}
+
+.legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== 时空对话模拟器 ===== */
+.time-dialogue-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, #fffef9 0%, #f5f0e6 100%);
+}
+
+.dialogue-interface {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dialogue-character-select {
+    margin-bottom: 2rem;
+}
+
+.character-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.character-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid var(--color-paper-dark);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--color-ink);
+}
+
+.character-tab:hover {
+    border-color: var(--color-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.1);
+}
+
+.character-tab.active {
+    border-color: var(--color-ochre);
+    background: linear-gradient(135deg, var(--color-ochre), var(--color-ochre-light));
+    color: white;
+    box-shadow: 0 4px 16px rgba(139, 69, 19, 0.3);
+}
+
+.character-tab img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.dialogue-chat-area {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(139, 69, 19, 0.12);
+    border: 1px solid rgba(139, 69, 19, 0.08);
+}
+
+.dialogue-scene {
+    position: relative;
+    background: linear-gradient(180deg, #e8ddd0 0%, #d4c4b0 50%, #c4b5a0 100%);
+    min-height: 500px;
+    overflow: hidden;
+}
+
+.scene-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 50% 100%, rgba(139, 69, 19, 0.15) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(135, 206, 235, 0.3) 0%, rgba(255, 228, 196, 0.2) 50%, transparent 100%);
+}
+
+.scene-background::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, transparent 0%, rgba(107, 142, 35, 0.2) 100%);
+}
+
+.scene-character {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.scene-character img {
+    width: 180px;
+    height: 220px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+    transition: all 0.5s ease;
+}
+
+.character-mood {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--color-ochre);
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: moodPulse 2s ease-in-out infinite;
+}
+
+@keyframes moodPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.scene-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.dialogue-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, #faf8f5 0%, #f5f2ed 100%);
+}
+
+.dialogue-messages {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.dialogue-welcome {
+    padding: 1rem 0;
+}
+
+.ancient-paper {
+    position: relative;
+    background: linear-gradient(135deg, #f5f0e0 0%, #faf5e8 50%, #f0e8d0 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(139, 69, 19, 0.15);
+    box-shadow: 
+        inset 0 0 30px rgba(139, 69, 19, 0.05),
+        0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.ancient-paper::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 1px solid rgba(139, 69, 19, 0.08);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.welcome-text {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 2;
+    color: var(--color-ink);
+    text-align: justify;
+}
+
+.paper-seal {
+    margin-top: 1.5rem;
+    text-align: right;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--color-ochre);
+    opacity: 0.7;
+}
+
+.paper-seal::before {
+    content: '◆ ';
+}
+
+.dialogue-message {
+    margin-bottom: 1rem;
+    animation: messageSlideIn 0.4s ease;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dialogue-message.user {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dialogue-message.user .message-bubble {
+    background: linear-gradient(135deg, var(--color-ochre), var(--color-ochre-light));
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.dialogue-message.character {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.dialogue-message.character .message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--color-gold);
+}
+
+.dialogue-message.character .message-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dialogue-message.character .message-bubble {
+    background: white;
+    color: var(--color-ink);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--color-paper-dark);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.message-bubble {
+    padding: 0.875rem 1.25rem;
+    border-radius: 16px;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message-bubble.typing::after {
+    content: '|';
+    animation: cursorBlink 0.8s infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.dialogue-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-paper-dark);
+}
+
+.question-btn {
+    padding: 0.625rem 1.25rem;
+    background: white;
+    border: 1px solid var(--color-paper-dark);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-sans);
+}
+
+.question-btn:hover {
+    background: var(--color-ochre);
+    border-color: var(--color-ochre);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+}
+
+/* ===== 水墨诗境 ===== */
+.poetry-ink-section {
+    position: relative;
+    padding: 6rem 2rem;
+    min-height: 700px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8f6f1 0%, #faf8f5 50%, #f5f0e6 100%);
+}
+
+.ink-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 20% 80%, rgba(139, 69, 19, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(201, 169, 97, 0.04) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b4513' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+#ink-particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.ink-moon {
+    position: absolute;
+    top: 8%;
+    right: 12%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #faf5e8 0%, #f0e8d0 40%, rgba(201, 169, 97, 0.2) 70%, transparent 80%);
+    box-shadow:
+        0 0 40px rgba(201, 169, 97, 0.15),
+        0 0 80px rgba(201, 169, 97, 0.08);
+    z-index: 2;
+    animation: moonGlow 6s ease-in-out infinite;
+}
+
+.ink-moon::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    width: 35%;
+    height: 35%;
+    border-radius: 50%;
+    background: rgba(139, 69, 19, 0.04);
+}
+
+@keyframes moonGlow {
+    0%, 100% {
+        box-shadow: 0 0 40px rgba(201, 169, 97, 0.15), 0 0 80px rgba(201, 169, 97, 0.08);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 60px rgba(201, 169, 97, 0.2), 0 0 100px rgba(201, 169, 97, 0.1);
+        transform: scale(1.02);
+    }
+}
+
+.ink-mist {
+    position: absolute;
+    width: 200%;
+    height: 200px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.ink-mist-1 {
+    bottom: 5%;
+    left: -50%;
+    background: linear-gradient(90deg, transparent 0%, rgba(139, 69, 19, 0.02) 20%, rgba(139, 69, 19, 0.04) 50%, rgba(139, 69, 19, 0.02) 80%, transparent 100%);
+    animation: mistDrift 25s ease-in-out infinite;
+}
+
+.ink-mist-2 {
+    bottom: 15%;
+    left: -30%;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 97, 0.02) 25%, rgba(201, 169, 97, 0.04) 50%, rgba(201, 169, 97, 0.02) 75%, transparent 100%);
+    animation: mistDrift 30s ease-in-out infinite reverse;
+}
+
+.ink-mist-3 {
+    bottom: 25%;
+    left: -40%;
+    background: linear-gradient(90deg, transparent 0%, rgba(139, 69, 19, 0.015) 30%, rgba(139, 69, 19, 0.03) 50%, rgba(139, 69, 19, 0.015) 70%, transparent 100%);
+    animation: mistDrift 20s ease-in-out infinite;
+    animation-delay: -8s;
+}
+
+@keyframes mistDrift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10%); }
+}
+
+.ink-container {
+    position: relative;
+    z-index: 5;
+}
+
+.ink-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.ink-tag {
+    background: rgba(139, 69, 19, 0.08);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    color: var(--color-ochre);
+}
+
+.ink-title {
+    color: var(--color-ochre);
+    text-shadow: none;
+}
+
+.ink-subtitle {
+    color: var(--color-stone);
+}
+
+/* 墨韵光球容器 */
+.ink-orbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+/* 单个墨韵光球 */
+.ink-orb {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ink-orb:hover {
+    transform: translateY(-12px);
+}
+
+.ink-orb-sphere {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.ink-orb:nth-child(1) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(139, 69, 19, 0.15) 0%, rgba(139, 69, 19, 0.25) 40%, rgba(139, 69, 19, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(139, 69, 19, 0.15), inset 0 0 30px rgba(139, 69, 19, 0.1);
+}
+
+.ink-orb:nth-child(2) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(160, 120, 60, 0.15) 0%, rgba(160, 120, 60, 0.25) 40%, rgba(160, 120, 60, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(160, 120, 60, 0.15), inset 0 0 30px rgba(160, 120, 60, 0.1);
+}
+
+.ink-orb:nth-child(3) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(139, 90, 43, 0.15) 0%, rgba(139, 90, 43, 0.25) 40%, rgba(139, 90, 43, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(139, 90, 43, 0.15), inset 0 0 30px rgba(139, 90, 43, 0.1);
+}
+
+.ink-orb:nth-child(4) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(107, 80, 40, 0.15) 0%, rgba(107, 80, 40, 0.25) 40%, rgba(107, 80, 40, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(107, 80, 40, 0.15), inset 0 0 30px rgba(107, 80, 40, 0.1);
+}
+
+.ink-orb:nth-child(5) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(180, 130, 60, 0.15) 0%, rgba(180, 130, 60, 0.25) 40%, rgba(180, 130, 60, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(180, 130, 60, 0.15), inset 0 0 30px rgba(180, 130, 60, 0.1);
+}
+
+.ink-orb:nth-child(6) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(160, 80, 50, 0.15) 0%, rgba(160, 80, 50, 0.25) 40%, rgba(160, 80, 50, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(160, 80, 50, 0.15), inset 0 0 30px rgba(160, 80, 50, 0.1);
+}
+
+.ink-orb:nth-child(7) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(201, 169, 97, 0.2) 0%, rgba(201, 169, 97, 0.3) 40%, rgba(201, 169, 97, 0.4) 100%);
+    box-shadow: 0 4px 20px rgba(201, 169, 97, 0.2), inset 0 0 30px rgba(201, 169, 97, 0.15);
+}
+
+.ink-orb:nth-child(8) .ink-orb-sphere {
+    background: radial-gradient(circle at 35% 35%, rgba(100, 80, 50, 0.15) 0%, rgba(100, 80, 50, 0.25) 40%, rgba(100, 80, 50, 0.35) 100%);
+    box-shadow: 0 4px 20px rgba(100, 80, 50, 0.15), inset 0 0 30px rgba(100, 80, 50, 0.1);
+}
+
+.ink-orb:hover .ink-orb-sphere {
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(139, 69, 19, 0.2), 0 0 60px rgba(201, 169, 97, 0.1);
+}
+
+/* 光球内部水墨纹理 */
+.ink-orb-sphere::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 40%);
+    z-index: 1;
+}
+
+.ink-orb-sphere::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 69, 19, 0.15);
+    animation: orbPulse 4s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+    0%, 100% {
+        border-color: rgba(139, 69, 19, 0.15);
+        transform: scale(1);
+    }
+    50% {
+        border-color: rgba(201, 169, 97, 0.3);
+        transform: scale(1.05);
+    }
+}
+
+/* 光球内文字 */
+.ink-orb-text {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-ochre);
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.1em;
+}
+
+.ink-orb-subtext {
+    position: relative;
+    z-index: 2;
+    font-size: 0.7rem;
+    color: rgba(139, 69, 19, 0.5);
+    margin-top: 2px;
+    letter-spacing: 0.15em;
+}
+
+/* 光球下方信息 */
+.ink-orb-info {
+    margin-top: 1.25rem;
+    text-align: center;
+}
+
+.ink-orb-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--color-ochre);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.05em;
+}
+
+.ink-orb-author {
+    font-size: 0.8125rem;
+    color: var(--color-stone);
+    letter-spacing: 0.1em;
+}
+
+/* 光球底部涟漪 */
+.ink-orb-ripple {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(139, 69, 19, 0.08) 0%, transparent 70%);
+    animation: ripplePulse 3s ease-in-out infinite;
+}
+
+@keyframes ripplePulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateX(-50%) scale(1.3); opacity: 0.8; }
+}
+
+/* ===== 全屏诗卷弹层 ===== */
+.ink-poem-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ink-poem-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ink-poem-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(5, 5, 10, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.ink-poem-scroll {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    width: 90%;
+    animation: scrollUnfurl 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scrollUnfurl {
+    0% {
+        transform: scaleY(0.1) scaleX(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scaleY(1.02) scaleX(1.01);
+    }
+    100% {
+        transform: scaleY(1) scaleX(1);
+        opacity: 1;
+    }
+}
+
+.ink-poem-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 50%;
+    background: rgba(10, 10, 18, 0.8);
+    color: #c9a961;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.ink-poem-close:hover {
+    background: rgba(201, 169, 97, 0.2);
+    border-color: rgba(201, 169, 97, 0.6);
+    transform: rotate(90deg);
+}
+
+.ink-poem-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.ink-scroll-paper {
+    position: relative;
+    background: linear-gradient(180deg, #f5f0e0 0%, #faf5e8 5%, #f0e8d0 95%, #e8dcc0 100%);
+    border-radius: 4px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(139, 69, 19, 0.1),
+        inset 0 0 40px rgba(139, 69, 19, 0.05);
+    overflow: hidden;
+}
+
+.ink-scroll-top-rod,
+.ink-scroll-bottom-rod {
+    height: 24px;
+    background: linear-gradient(180deg, #6b4226 0%, #8b6914 30%, #a0842c 50%, #8b6914 70%, #6b4226 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.ink-scroll-top-rod::before,
+.ink-scroll-bottom-rod::before,
+.ink-scroll-top-rod::after,
+.ink-scroll-bottom-rod::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #c9a961, #8b6914, #5c3d2e);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.ink-scroll-top-rod::before,
+.ink-scroll-bottom-rod::before {
+    left: -12px;
+}
+
+.ink-scroll-top-rod::after,
+.ink-scroll-bottom-rod::after {
+    right: -12px;
+}
+
+.ink-scroll-content {
+    padding: 3rem 3.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.ink-scroll-seal {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    opacity: 0.15;
+    transform: rotate(-15deg);
+    box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
+}
+
+.ink-scroll-seal::after {
+    content: '詩';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: bold;
+}
+
+.ink-poem-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: #3d2b1f;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    animation: poemFadeIn 0.6s ease 0.3s forwards;
+}
+
+.ink-poem-author {
+    font-size: 0.9375rem;
+    color: #8b7355;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.2em;
+    opacity: 0;
+    animation: poemFadeIn 0.6s ease 0.5s forwards;
+}
+
+.ink-poem-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 69, 19, 0.3), transparent);
+    margin: 1.5rem auto;
+    opacity: 0;
+    animation: poemFadeIn 0.6s ease 0.4s forwards;
+}
+
+.ink-poem-body {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 2.5;
+    color: #2c1810;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: poemFadeIn 0.6s ease 0.6s forwards;
+}
+
+.ink-poem-note {
+    font-size: 0.8125rem;
+    color: #8b7355;
+    font-style: italic;
+    line-height: 1.8;
+    padding: 1rem;
+    background: rgba(139, 69, 19, 0.04);
+    border-radius: 8px;
+    border-left: 3px solid rgba(139, 69, 19, 0.15);
+    text-align: left;
+    opacity: 0;
+    animation: poemFadeIn 0.6s ease 0.8s forwards;
+}
+
+@keyframes poemFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== 历史人物卡片增强 ===== */
+.history-figure-card {
+    position: relative;
+}
+
+.figure-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.figure-hover-hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(139, 69, 19, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.history-figure-card:hover .figure-hover-hint {
+    opacity: 1;
+}
+
+.figure-hover-hint span {
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 卡片内对话按钮 */
+.figure-dialogue-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-ochre), #a0522d);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.figure-dialogue-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.figure-dialogue-btn:hover::before {
+    left: 100%;
+}
+
+.figure-dialogue-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.35);
+}
+
+.figure-dialogue-btn:active {
+    transform: translateY(-1px);
+}
+
+.dialogue-btn-icon {
+    font-size: 1.125rem;
+}
+
+/* ===== 对话弹层 ===== */
+.dialogue-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dialogue-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dialogue-overlay-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 15, 0.88);
+    backdrop-filter: blur(8px);
+}
+
+.dialogue-overlay-content {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 85vh;
+    background: linear-gradient(135deg, #faf8f5 0%, #f5f0e6 100%);
+    border-radius: 20px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dialogue-overlay.active .dialogue-overlay-content {
+    transform: scale(1) translateY(0);
+}
+
+.dialogue-overlay-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-ochre);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.dialogue-overlay-close:hover {
+    background: var(--color-ochre);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.dialogue-overlay-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.dialogue-overlay-inner {
+    display: flex;
+    height: 100%;
+    max-height: 85vh;
+}
+
+.dialogue-scene-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px 0 0 20px;
+}
+
+.dialogue-scene-panel .scene-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(139, 69, 19, 0.05) 0%, rgba(139, 69, 19, 0.1) 50%, rgba(139, 69, 19, 0.15) 100%);
+    transition: background 0.5s ease;
+}
+
+.dialogue-scene-panel .scene-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 50% 80%, rgba(201, 169, 97, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 20%, rgba(139, 69, 19, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 30%, rgba(201, 169, 97, 0.05) 0%, transparent 40%);
+}
+
+.scene-character-overlay {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+}
+
+.scene-character-overlay img {
+    width: 200px;
+    height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3)) brightness(1.02);
+    animation: characterFloat 4s ease-in-out infinite;
+    mix-blend-mode: multiply;
+}
+
+.dialogue-scene-panel .scene-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.dialogue-chat-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 10% 10%, rgba(201, 169, 97, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 90%, rgba(139, 69, 19, 0.06) 0%, transparent 50%);
+}
+
+.dialogue-chat-panel .dialogue-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding-right: 0.5rem;
+}
+
+.dialogue-chat-panel .dialogue-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(139, 69, 19, 0.1);
+}
+
+/* ===== 弹窗关系列表 ===== */
+.relation-list {
+    margin-top: 1rem;
+}
+
+.relation-list h4 {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--color-ochre);
+    margin-bottom: 0.75rem;
+}
+
+.relation-list p {
+    font-size: 0.9375rem;
+    color: var(--color-stone);
+    line-height: 1.8;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-gold);
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 992px) {
+    .dialogue-chat-area {
+        grid-template-columns: 1fr;
+    }
+
+    .dialogue-scene {
+        min-height: 300px;
+    }
+
+    .scene-character img {
+        width: 140px;
+        height: 170px;
+    }
+
+    .ink-orbs {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .ink-orb-sphere {
+        width: 110px;
+        height: 110px;
+    }
+
+    .ink-orb-text {
+        font-size: 1.4rem;
+    }
+
+    .relation-canvas-wrapper {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .character-tabs {
+        gap: 0.5rem;
+    }
+
+    .character-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .character-tab img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .dialogue-content {
+        padding: 1rem;
+    }
+
+    .message-bubble {
+        max-width: 90%;
+        font-size: 0.875rem;
+    }
+
+    .ink-orbs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .ink-orb-sphere {
+        width: 100px;
+        height: 100px;
+    }
+
+    .ink-orb-text {
+        font-size: 1.25rem;
+    }
+
+    .ink-moon {
+        width: 80px;
+        height: 80px;
+        top: 5%;
+        right: 8%;
+    }
+
+    .ink-scroll-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .ink-poem-title {
+        font-size: 1.4rem;
+    }
+
+    .ink-poem-body {
+        font-size: 1.1rem;
+    }
+
+    .relation-legend {
+        gap: 1rem;
+    }
+
+    .legend-item {
+        font-size: 12px;
+    }
+
+    .dialogue-overlay-inner {
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+    }
+
+    .dialogue-scene-panel {
+        display: none;
+    }
+
+    .dialogue-chat-panel {
+        padding: 1.5rem;
+    }
+
+    .dialogue-overlay-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .dialogue-scene {
+        min-height: 250px;
+    }
+
+    .scene-character img {
+        width: 120px;
+        height: 150px;
+    }
+
+    .ink-orbs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .ink-orb-sphere {
+        width: 85px;
+        height: 85px;
+    }
+
+    .ink-orb-text {
+        font-size: 1.1rem;
+    }
+
+    .ink-orb-title {
+        font-size: 0.875rem;
+    }
+
+    .ink-moon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .ink-scroll-content {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .ink-poem-title {
+        font-size: 1.25rem;
+    }
+
+    .ink-poem-body {
+        font-size: 1rem;
+        line-height: 2.2;
+    }
+
+    .dialogue-chat-panel {
+        padding: 1rem;
+    }
+
+    .dialogue-chat-panel .dialogue-questions {
+        gap: 0.5rem;
+    }
+
+    .dialogue-chat-panel .question-btn {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+}
