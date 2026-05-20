@@ -292,6 +292,150 @@
     text-align: justify;
 }
 
+/* ===== 3D模型展示 ===== */
+.model-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, var(--color-paper) 0%, #e8e4dc 50%, var(--color-paper) 100%);
+}
+
+.model-section .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.model-viewer-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    background: transparent;
+}
+
+.model-viewer {
+    width: 100%    ;
+    height: 550px;
+    display: block;
+}
+
+.model-viewer canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.model-controls {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 10;
+}
+
+.model-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 69, 19, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--color-ochre);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.model-btn:hover {
+    background: rgba(139, 69, 19, 0.2);
+    transform: scale(1.1);
+}
+
+.model-btn.active {
+    background: var(--color-ochre);
+    border-color: var(--color-ochre);
+    color: var(--color-white);
+}
+
+.model-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.model-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: transparent;
+    color: var(--color-ochre);
+    z-index: 5;
+    transition: opacity 0.5s ease;
+}
+
+.model-loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(139, 69, 19, 0.15);
+    border-top-color: var(--color-ochre);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.model-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 2rem auto 0;
+}
+
+.model-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.model-info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.model-info-label {
+    font-size: var(--text-xs);
+    color: var(--color-stone);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.model-info-value {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-ochre);
+}
+
 /* ===== 叙事开篇 ===== */
 .intro-section {
     padding: 6rem 2rem;
@@ -595,6 +739,14 @@
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+
+    .model-viewer {
+        height: 400px;
+    }
+
+    .model-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
@@ -610,5 +762,23 @@
     
     .intro-features {
         flex-direction: column;
+    }
+
+    .model-viewer {
+        height: 300px;
+    }
+
+    .model-info {
+        grid-template-columns: 1fr;
+    }
+
+    .model-controls {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .model-btn {
+        width: 38px;
+        height: 38px;
     }
 }

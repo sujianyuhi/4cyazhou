@@ -6,14 +6,13 @@
     <title>魂·风骨之承 - 崖城风骨</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/pages.css">
+    <link rel="stylesheet" href="../css/spirit.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 页面进度条 -->
     <div class="page-progress"></div>
 
-    <!-- 弹窗 -->
     <div class="modal">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
@@ -21,7 +20,6 @@
         </div>
     </div>
 
-    <!-- 全局导航 -->
     <nav class="navbar scrolled">
         <div class="nav-brand">
             <span class="nav-logo">崖城风骨</span>
@@ -41,12 +39,10 @@
         </button>
     </nav>
 
-    <!-- 智能助手按钮（独立定位，可拖拽） -->
     <button id="assistant-toggle" class="control-btn" title="智能助手">
         <img src="../images/content/agent1.png" alt="智能助手">
     </button>
 
-    <!-- 全局控件 -->
     <div class="global-controls">
         <div class="audio-control-wrapper">
             <button id="audio-btn" class="control-btn" title="背景音乐">
@@ -56,7 +52,6 @@
                     <line x1="17" y1="9" x2="23" y2="15"/>
                 </svg>
             </button>
-            <!-- 音频控制面板 -->
             <div id="audio-panel" class="audio-panel">
                 <div class="audio-panel-header">
                     <span class="audio-title">背景音乐</span>
@@ -91,8 +86,7 @@
             </svg>
         </button>
     </div>
-    
-    <!-- AI智能助手 -->
+
     <div class="assistant-float" id="assistant-float">
         <div class="assistant-header" id="assistant-header">
             <div class="assistant-title">
@@ -119,10 +113,8 @@
                 </button>
             </div>
         </div>
-        
         <div class="assistant-chat" id="assistant-chat">
             <div class="chat-messages" id="chat-messages"></div>
-            
             <div class="chat-loading" id="chat-loading" style="display: none;">
                 <div class="loading-dots">
                     <span></span>
@@ -131,7 +123,6 @@
                 </div>
                 <span>AI思考中...</span>
             </div>
-            
             <div class="quick-questions" id="quick-questions">
                 <button class="quick-btn" data-question="崖州古城的历史起源是什么？">古城历史</button>
                 <button class="quick-btn" data-question="崖州古城有哪些著名历史人物？">历史人物</button>
@@ -139,7 +130,6 @@
                 <button class="quick-btn" data-question="苏轼与崖州有什么渊源？">苏轼</button>
             </div>
         </div>
-        
         <div class="assistant-input-area">
             <div class="assistant-search">
                 <input type="text" id="assistant-input" placeholder="输入您的问题，按Enter发送..." autocomplete="off" />
@@ -151,7 +141,6 @@
                 </button>
             </div>
         </div>
-        
         <div class="assistant-resize" id="assistant-resize"></div>
     </div>
 
@@ -167,43 +156,355 @@
         </div>
     </section>
 
-    <section class="content-section">
+    <section class="spirit-intro-section">
         <div class="container">
-            <div class="section-header scroll-reveal">
-                <span class="section-tag">核心价值</span>
-                <h2 class="section-title">四层叙事闭环</h2>
-                <p class="section-subtitle">从物质到精神的完整升华</p>
+            <div class="spirit-intro-content scroll-reveal">
+                <p class="spirit-intro-text">
+                    崖州古城千年文脉，并非孤立沉淀，而是<span class="highlight-shape">形为基底</span>、<span class="highlight-tech">技为筋骨</span>、<span class="highlight-people">人为脉络</span>、<span class="highlight-soul">魂为内核</span>的完整文化体系。前三维度层层递进、互为支撑，最终共同汇聚、升华出崖州古城独有的精神风骨。
+                </p>
             </div>
-            
-            <div class="narrative-ring scroll-reveal">
-                <div class="ring-container">
-                    <div class="ring ring-outer" data-layer="shape">
-                        <span class="ring-text">形</span>
-                        <span class="ring-desc">古城形制</span>
+        </div>
+    </section>
+
+    <section class="spirit-interactive-section">
+        <div class="spirit-interactive-container">
+            <div class="spirit-left-panel">
+                <h3 class="panel-title">
+                    <span class="panel-title-icon">◈</span>
+                    三维模块
+                    <span class="panel-title-icon">◈</span>
+                </h3>
+                <div class="module-cards">
+                    <div class="module-card" data-dimension="shape">
+                        <div class="module-card-inner">
+                            <div class="module-card-front">
+                                <div class="module-icon">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="8" y="20" width="48" height="36" rx="2"/>
+                                        <path d="M4 20L32 4L60 20"/>
+                                        <rect x="24" y="36" width="16" height="20"/>
+                                        <path d="M32 36V28"/>
+                                    </svg>
+                                </div>
+                                <div class="module-info">
+                                    <h4>古城格局</h4>
+                                    <span class="module-tag">形</span>
+                                    <p>城池形制 · 街巷肌理 · 空间布局</p>
+                                </div>
+                            </div>
+                            <div class="module-card-back">
+                                <div class="back-icon">形</div>
+                                <p>点击激活维度</p>
+                                <div class="back-glow"></div>
+                            </div>
+                            <div class="module-glow"></div>
+                        </div>
                     </div>
-                    <div class="ring ring-middle-outer" data-layer="tech">
-                        <span class="ring-text">技</span>
-                        <span class="ring-desc">营造技艺</span>
+                    <div class="module-card" data-dimension="tech">
+                        <div class="module-card-inner">
+                            <div class="module-card-front">
+                                <div class="module-icon">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M32 8L32 20"/>
+                                        <path d="M20 14L32 20L44 14"/>
+                                        <path d="M32 20L32 32"/>
+                                        <path d="M20 26L32 32L44 26"/>
+                                        <path d="M32 32L32 44"/>
+                                        <path d="M20 38L32 44L44 38"/>
+                                        <circle cx="32" cy="52" r="4"/>
+                                    </svg>
+                                </div>
+                                <div class="module-info">
+                                    <h4>营造技艺</h4>
+                                    <span class="module-tag">技</span>
+                                    <p>榫卯工艺 · 雕刻技法 · 建筑智慧</p>
+                                </div>
+                            </div>
+                            <div class="module-card-back">
+                                <div class="back-icon">技</div>
+                                <p>点击激活维度</p>
+                                <div class="back-glow"></div>
+                            </div>
+                            <div class="module-glow"></div>
+                        </div>
                     </div>
-                    <div class="ring ring-middle-inner" data-layer="people">
-                        <span class="ring-text">人</span>
-                        <span class="ring-desc">人文活动</span>
-                    </div>
-                    <div class="ring ring-inner" data-layer="soul">
-                        <span class="ring-text">魂</span>
-                        <span class="ring-desc">精神内核</span>
+                    <div class="module-card" data-dimension="people">
+                        <div class="module-card-inner">
+                            <div class="module-card-front">
+                                <div class="module-icon">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="32" cy="16" r="10"/>
+                                        <path d="M16 56C16 42 23 34 32 34C41 34 48 42 48 56"/>
+                                        <path d="M8 56L56 56"/>
+                                    </svg>
+                                </div>
+                                <div class="module-info">
+                                    <h4>历史人物</h4>
+                                    <span class="module-tag">人</span>
+                                    <p>名臣谪贤 · 本土先民 · 商旅百姓</p>
+                                </div>
+                            </div>
+                            <div class="module-card-back">
+                                <div class="back-icon">人</div>
+                                <p>点击激活维度</p>
+                                <div class="back-glow"></div>
+                            </div>
+                            <div class="module-glow"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="ring-hint">点击环形可回溯对应内容</div>
             </div>
-            
-            <div class="soul-quote scroll-reveal">
-                <blockquote>
-                    <p class="quote-line">从物质形态的<span class="quote-highlight">「形」</span>，</p>
-                    <p class="quote-line">到技艺传承的<span class="quote-highlight">「技」</span>，</p>
-                    <p class="quote-line">再到人文活动的<span class="quote-highlight">「人」</span>，</p>
-                    <p class="quote-line">最终升华为精神内核的<span class="quote-highlight">「魂」</span>。</p>
-                </blockquote>
+
+            <div class="spirit-center-panel">
+                <p class="center-hint">✦ 点击轨道节点或左侧卡片，汇聚崖城之魂 ✦</p>
+                <div class="cosmos-visualization">
+                    <canvas id="cosmos-canvas" width="600" height="600"></canvas>
+                    <div class="cosmos-overlay">
+                        <div class="cosmos-soul" data-dimension="soul">
+                            <div class="soul-core">
+                                <span class="soul-char">魂</span>
+                            </div>
+                        </div>
+                        <div class="cosmos-orbit orbit-shape" data-dimension="shape">
+                            <div class="orbit-node">
+                                <span class="orbit-label">形</span>
+                            </div>
+                        </div>
+                        <div class="cosmos-orbit orbit-tech" data-dimension="tech">
+                            <div class="orbit-node">
+                                <span class="orbit-label">技</span>
+                            </div>
+                        </div>
+                        <div class="cosmos-orbit orbit-people" data-dimension="people">
+                            <div class="orbit-node">
+                                <span class="orbit-label">人</span>
+                            </div>
+                        </div>
+                        <svg class="connection-svg" viewBox="0 0 600 600">
+                            <defs>
+                                <linearGradient id="beam-shape" x1="50%" y1="50%" x2="50%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#C9A961;stop-opacity:0"/>
+                                    <stop offset="50%" style="stop-color:#8B4513;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#8B4513;stop-opacity:0"/>
+                                </linearGradient>
+                                <linearGradient id="beam-tech" x1="50%" y1="50%" x2="85%" y2="85%">
+                                    <stop offset="0%" style="stop-color:#C9A961;stop-opacity:0"/>
+                                    <stop offset="50%" style="stop-color:#D2691E;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#D2691E;stop-opacity:0"/>
+                                </linearGradient>
+                                <linearGradient id="beam-people" x1="50%" y1="50%" x2="15%" y2="85%">
+                                    <stop offset="0%" style="stop-color:#C9A961;stop-opacity:0"/>
+                                    <stop offset="50%" style="stop-color:#CD853F;stop-opacity:0.8"/>
+                                    <stop offset="100%" style="stop-color:#CD853F;stop-opacity:0"/>
+                                </linearGradient>
+                            </defs>
+                            <line class="energy-beam beam-shape" x1="300" y1="300" x2="300" y2="50" stroke="url(#beam-shape)" stroke-width="2"/>
+                            <line class="energy-beam beam-tech" x1="300" y1="300" x2="500" y2="470" stroke="url(#beam-tech)" stroke-width="2"/>
+                            <line class="energy-beam beam-people" x1="300" y1="300" x2="100" y2="470" stroke="url(#beam-people)" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spirit-right-panel">
+                <h3 class="panel-title">
+                    <span class="panel-title-icon">◈</span>
+                    维度解说
+                    <span class="panel-title-icon">◈</span>
+                </h3>
+                <div class="explanation-area">
+                    <div class="explanation-content" id="explanation-content">
+                        <div class="default-explanation">
+                            <div class="explanation-icon">
+                                <div class="icon-orbit">
+                                    <div class="icon-planet"></div>
+                                    <div class="icon-moon"></div>
+                                </div>
+                            </div>
+                            <p class="explanation-text">探索形、技、人三个维度，见证它们如何汇聚升华，凝练成崖城独有的精神风骨。</p>
+                            <div class="explanation-tips">
+                                <span class="tip">
+                                    <span class="tip-dot"></span>
+                                    点击激活
+                                </span>
+                                <span class="tip">
+                                    <span class="tip-dot"></span>
+                                    悬停预览
+                                </span>
+                                <span class="tip">
+                                    <span class="tip-dot"></span>
+                                    汇聚成魂
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dimension-progress">
+                        <div class="progress-item" data-dim="shape">
+                            <span class="progress-label">形</span>
+                            <div class="progress-track">
+                                <div class="progress-fill"></div>
+                                <div class="progress-glow"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item" data-dim="tech">
+                            <span class="progress-label">技</span>
+                            <div class="progress-track">
+                                <div class="progress-fill"></div>
+                                <div class="progress-glow"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item" data-dim="people">
+                            <span class="progress-label">人</span>
+                            <div class="progress-track">
+                                <div class="progress-fill"></div>
+                                <div class="progress-glow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="spirit-controls">
+            <button class="reset-btn" id="reset-btn" title="一键重置">
+                <div class="btn-glow"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                <span>一键回溯</span>
+            </button>
+            <div class="completion-status" id="completion-status">
+                <span class="status-text">已点亮 <span class="status-num">0</span>/3 维度</span>
+                <div class="status-dots">
+                    <span class="status-dot" data-dim="shape">
+                        <span class="dot-inner"></span>
+                    </span>
+                    <span class="status-dot" data-dim="tech">
+                        <span class="dot-inner"></span>
+                    </span>
+                    <span class="status-dot" data-dim="people">
+                        <span class="dot-inner"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="spirit-detail-section">
+        <div class="container">
+            <div class="detail-cards">
+                <div class="detail-card" data-dimension="shape">
+                    <div class="detail-card-header">
+                        <span class="detail-num">01</span>
+                        <h3>以「形」立城，奠定文脉根基</h3>
+                    </div>
+                    <div class="detail-card-body">
+                        <p>古城独特的城池格局、街巷肌理、空间布局，是崖州文化最直观的物质载体。</p>
+                        <p>"三通、四漏、七转、八角"的古城形制，依山傍海的选址智慧，构筑了崖州千年不变的城市骨架。</p>
+                        <p>有形的城池格局，承载无形的山海气场，为文化精神的孕育奠定空间基础。</p>
+                    </div>
+                    <div class="detail-card-footer">
+                        <span class="detail-tag">空间载体</span>
+                        <span class="detail-tag">物质基底</span>
+                    </div>
+                </div>
+
+                <div class="detail-card" data-dimension="tech">
+                    <div class="detail-card-header">
+                        <span class="detail-num">02</span>
+                        <h3>以「技」筑韵，沉淀匠人精神</h3>
+                    </div>
+                    <div class="detail-card-body">
+                        <p>传统营造技艺、材料工艺、装饰美学，是古人因地制宜、顺势而为的建造智慧。</p>
+                        <p>精雕细琢的工艺细节、适配南疆气候的建筑技法，体现了精益求精、务实创新的工匠精神。</p>
+                        <p>建筑技艺让古城不止有皮囊，更拥有坚韧、细致、质朴的文化气质。</p>
+                    </div>
+                    <div class="detail-card-footer">
+                        <span class="detail-tag">匠心智慧</span>
+                        <span class="detail-tag">技艺传承</span>
+                    </div>
+                </div>
+
+                <div class="detail-card" data-dimension="people">
+                    <div class="detail-card-header">
+                        <span class="detail-num">03</span>
+                        <h3>以「人」传脉，赋予古城生命力</h3>
+                    </div>
+                    <div class="detail-card-body">
+                        <p>历代名臣谪贤、本土先民、商旅百姓在崖州生活耕耘、兴教兴城。</p>
+                        <p>人物事迹、人文活动不断重塑建筑功能、丰富城市故事、积累地域底蕴。</p>
+                        <p>因人而有故事，因故事而有温度，让静态古建筑成为流动的文化载体。</p>
+                    </div>
+                    <div class="detail-card-footer">
+                        <span class="detail-tag">人文底蕴</span>
+                        <span class="detail-tag">生命传承</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="spirit-convergence-section">
+        <div class="container">
+            <div class="convergence-content scroll-reveal">
+                <h2 class="convergence-title">三维合一，凝练崖城之魂</h2>
+                <div class="convergence-visual">
+                    <div class="convergence-item shape-conv">
+                        <span class="conv-label">形</span>
+                        <span class="conv-desc">赋予古城格局气度</span>
+                    </div>
+                    <div class="convergence-arrow">
+                        <svg viewBox="0 0 40 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12h32M28 6l8 6-8 6"/>
+                        </svg>
+                    </div>
+                    <div class="convergence-item tech-conv">
+                        <span class="conv-label">技</span>
+                        <span class="conv-desc">赋予古城匠心底蕴</span>
+                    </div>
+                    <div class="convergence-arrow">
+                        <svg viewBox="0 0 40 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12h32M28 6l8 6-8 6"/>
+                        </svg>
+                    </div>
+                    <div class="convergence-item people-conv">
+                        <span class="conv-label">人</span>
+                        <span class="conv-desc">赋予古城人文温度</span>
+                    </div>
+                    <div class="convergence-arrow">
+                        <svg viewBox="0 0 40 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12h32M28 6l8 6-8 6"/>
+                        </svg>
+                    </div>
+                    <div class="convergence-soul">
+                        <span class="soul-label">魂</span>
+                        <span class="soul-desc">崖城风骨</span>
+                    </div>
+                </div>
+                <div class="convergence-text">
+                    <p>正是空间形制、营造技艺、人文积淀三者层层叠加、深度交融，最终淬炼出崖州古城<span class="highlight">开放包容</span>、<span class="highlight">崇文刚毅</span>、<span class="highlight">生生不息</span>的千年精神内核。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="spirit-epilogue-section">
+        <div class="container">
+            <div class="epilogue-content scroll-reveal">
+                <div class="epilogue-poem">
+                    <p class="poem-line">一城形制，见山海格局；</p>
+                    <p class="poem-line">一匠精工，见古人智慧；</p>
+                    <p class="poem-line">一世人文，见千年风骨。</p>
+                </div>
+                <div class="epilogue-divider">
+                    <span></span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L12 22M2 12L22 12"/>
+                    </svg>
+                    <span></span>
+                </div>
+                <p class="epilogue-text">从物质到技艺，从人事到精神，崖州古城在形、技、人的层层积淀中，最终凝成独属于海南南端的崖城风骨，实现千年文脉的永续传承。</p>
             </div>
         </div>
     </section>
@@ -215,31 +516,40 @@
                 <h2 class="section-title">崖城风骨</h2>
                 <p class="section-subtitle">中华建筑文明的精神内核</p>
             </div>
-            
             <div class="heritage-values scroll-reveal">
                 <div class="value-card">
-                    <div class="value-icon">🏛️</div>
+                    <div class="value-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="16" width="32" height="28" rx="2"/>
+                            <path d="M4 16L24 4L44 16"/>
+                            <rect x="18" y="28" width="12" height="16"/>
+                        </svg>
+                    </div>
                     <h4>守正</h4>
                     <p>坚守中华传统营城理念、营造技艺、礼制文化的核心内核</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon">🌊</div>
+                    <div class="value-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M24 4C16 4 8 10 8 20C8 32 24 44 24 44C24 44 40 32 40 20C40 10 32 4 24 4Z"/>
+                            <path d="M24 12C20 12 16 16 16 20C16 26 24 32 24 32C24 32 32 26 32 20C32 16 28 12 24 12Z"/>
+                        </svg>
+                    </div>
                     <h4>包容</h4>
                     <p>适配南疆地域环境、融合海洋文化、吸纳多元人群的创新精神</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon">📜</div>
+                    <div class="value-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="8" width="36" height="32" rx="2"/>
+                            <path d="M6 16L42 16"/>
+                            <path d="M14 24L20 24"/>
+                            <path d="M14 32L28 32"/>
+                        </svg>
+                    </div>
                     <h4>传承</h4>
                     <p>千年文脉不绝，中华建筑文化与文明精神的持续传承</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="content-section">
-        <div class="container">
-            <div class="soul-conclusion scroll-reveal">
-                <p>崖州古城，这座承载着千年历史的南疆边城，以其独特的建筑风貌和深厚的文化底蕴，见证了中华传统建筑文明在南疆的传承与发展。从"形"到"魂"，从物质到精神，崖州古城的建筑文化，是中华文明多元一体格局的生动缩影。</p>
             </div>
         </div>
     </section>
@@ -274,6 +584,8 @@
             <p>内容聚焦1911年以前崖州古城建筑文化，符合大赛主题规范</p>
         </div>
     </footer>
+
+    <div class="tooltip" id="tooltip"></div>
 
     <script src="../js/global.js"></script>
     <script src="../js/spirit.js"></script>

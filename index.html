@@ -237,6 +237,55 @@
         </div>
     </section>
 
+    <!-- 3D模型展示 -->
+    <section class="model-section" id="model-section">
+        <div class="container">
+            <div class="section-header scroll-reveal">
+                <span class="section-tag">三维复原</span>
+                <h2 class="section-title">崖州孔庙 · 数字复原</h2>
+                <p class="section-subtitle">拖动旋转 · 滚轮缩放 · 沉浸式探索古建筑之美</p>
+            </div>
+            <div class="model-viewer-wrapper scroll-reveal">
+                <div id="model-viewer" class="model-viewer"></div>
+                <div class="model-controls">
+                    <button id="model-reset" class="model-btn" title="重置视角">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                    </button>
+                    <button id="model-rotate" class="model-btn active" title="自动旋转">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="model-loading" id="model-loading">
+                    <div class="model-loading-spinner"></div>
+                    <span>模型加载中...</span>
+                </div>
+            </div>
+            <div class="model-info scroll-reveal">
+                <div class="model-info-item">
+                    <span class="model-info-label">建筑名称</span>
+                    <span class="model-info-value">崖州孔庙（学宫）</span>
+                </div>
+                <div class="model-info-item">
+                    <span class="model-info-label">建筑年代</span>
+                    <span class="model-info-value">始建于北宋庆历年间</span>
+                </div>
+                <div class="model-info-item">
+                    <span class="model-info-label">建筑类型</span>
+                    <span class="model-info-value">祭祀孔子的礼制建筑</span>
+                </div>
+                <div class="model-info-item">
+                    <span class="model-info-label">文化地位</span>
+                    <span class="model-info-value">南疆文脉之源，崖州文化教育中心</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 叙事开篇 -->
     <section class="intro-section">
         <div class="container">
@@ -364,7 +413,16 @@
         </div>
     </footer>
 
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
     <script src="js/global.js"></script>
     <script src="js/index.js"></script>
+    <script type="module" src="js/model-viewer.js"></script>
 </body>
 </html>
