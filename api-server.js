@@ -214,10 +214,39 @@ async function handleAPIRequest(req, res, pathname) {
     res.end(JSON.stringify({ error: 'API端点不存在' }));
 }
 
+// 静态文件缓存配置
+const cacheConfig = {
+    // 长期缓存：模型文件、图片、字体
+    longTerm: ['.glb', '.gltf', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.woff', '.woff2', '.ttf', '.mp3'],
+    // 中期缓存：CSS、JS
+    mediumTerm: ['.css', '.js', '.json'],
+    // 不缓存：HTML
+    noCache: ['.html']
+};
+
+function getCacheHeaders(extname) {
+    if (cacheConfig.longTerm.includes(extname)) {
+        return {
+            'Cache-Control': 'public, max-age=31536000, immutable',
+            'Expires': new Date(Date.now() + 31536000000).toUTCString()
+        };
+    }
+    if (cacheConfig.mediumTerm.includes(extname)) {
+        return {
+            'Cache-Control': 'public, max-age=86400',
+            'Expires': new Date(Date.now() + 86400000).toUTCString()
+        };
+    }
+    return {
+        'Cache-Control': 'no-cache'
+    };
+}
+
 // 静态文件服务
 function serveStaticFile(req, res, filePath) {
     const extname = path.extname(filePath).toLowerCase();
     const contentType = mimeTypes[extname] || 'application/octet-stream';
+    const cacheHeaders = getCacheHeaders(extname);
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
@@ -229,9 +258,10 @@ function serveStaticFile(req, res, filePath) {
                 res.end('Server Error: ' + err.code, 'utf-8');
             }
         } else {
-            res.writeHead(200, { 
+            res.writeHead(200, {
                 'Content-Type': contentType,
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                ...cacheHeaders
             });
             res.end(content, 'utf-8');
         }

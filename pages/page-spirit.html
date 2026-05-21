@@ -257,30 +257,49 @@
 
             <div class="spirit-center-panel">
                 <p class="center-hint">✦ 点击轨道节点或左侧卡片，汇聚崖城之魂 ✦</p>
-                <div class="cosmos-visualization">
-                    <canvas id="cosmos-canvas" width="600" height="600"></canvas>
-                    <div class="cosmos-overlay">
-                        <div class="cosmos-soul" data-dimension="soul">
-                            <div class="soul-core">
-                                <span class="soul-char">魂</span>
+                <div class="magic-circle-container" id="magicCircleContainer">
+                    <!-- 背景粒子层 -->
+                    <div class="particle-bg" id="particle-bg"></div>
+                    <!-- 法阵底座 -->
+                    <div class="magic-base" id="magicBase"></div>
+                    <!-- 能量波纹 -->
+                    <div class="energy-ripples" id="energyRipples"></div>
+                    <!-- 点击爆发粒子层 -->
+                    <div class="click-burst-layer" id="clickBurstLayer"></div>
+                    <!-- 全屏光效层 -->
+                    <div class="screen-flash" id="screenFlash"></div>
+                    <!-- 能量牵引线SVG -->
+                    <svg class="tether-svg" id="tetherSvg" viewBox="0 0 600 600">
+                        <defs>
+                            <linearGradient id="tether-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(255,215,0,0.8)"/>
+                                <stop offset="100%" style="stop-color:rgba(255,215,0,0)"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="magic-circle" id="magicCircle">
+                        <!-- 核心中央：魂 -->
+                        <div class="center-soul" data-dimension="soul">
+                            <div class="soul-halo soul-halo-1"></div>
+                            <div class="soul-halo soul-halo-2"></div>
+                            <div class="soul-halo soul-halo-3"></div>
+                            <div class="soul-halo soul-halo-4"></div>
+                            <div class="soul-rays"></div>
+                            <div class="soul-core-3d">
+                                <span class="soul-char-3d">魂</span>
                             </div>
+                            <div class="soul-float-particles" id="soulFloatParticles"></div>
                         </div>
-                        <div class="cosmos-orbit orbit-shape" data-dimension="shape">
-                            <div class="orbit-node">
-                                <span class="orbit-label">形</span>
-                            </div>
-                        </div>
-                        <div class="cosmos-orbit orbit-tech" data-dimension="tech">
-                            <div class="orbit-node">
-                                <span class="orbit-label">技</span>
-                            </div>
-                        </div>
-                        <div class="cosmos-orbit orbit-people" data-dimension="people">
-                            <div class="orbit-node">
-                                <span class="orbit-label">人</span>
-                            </div>
-                        </div>
-                        <svg class="connection-svg" viewBox="0 0 600 600">
+                        <!-- 中圈：建筑围墙环 -->
+                        <div class="ring-middle" id="buildingRing"></div>
+                        <!-- 中圈粒子环 -->
+                        <div class="ring-particles ring-particles-middle" id="ringParticlesMiddle"></div>
+                        <!-- 外圈：人物与文字环 -->
+                        <div class="ring-outer" id="outerRing"></div>
+                        <!-- 外圈粒子环 -->
+                        <div class="ring-particles ring-particles-outer" id="ringParticlesOuter"></div>
+                        <!-- 能量连线 SVG -->
+                        <svg class="connection-svg-3d" viewBox="0 0 600 600">
                             <defs>
                                 <linearGradient id="beam-shape" x1="50%" y1="50%" x2="50%" y2="0%">
                                     <stop offset="0%" style="stop-color:#C9A961;stop-opacity:0"/>
@@ -589,5 +608,504 @@
 
     <script src="../js/global.js"></script>
     <script src="../js/spirit.js"></script>
+    <script>
+        // 3D转盘法阵动态生成脚本
+        (function() {
+            // 1. 动态生成中圈的建筑群（12个节点围成一圈）
+            const buildingRing = document.getElementById('buildingRing');
+            if (buildingRing) {
+                const totalBuildings = 12;
+                const buildingRadius = 140; // 280px 宽度的一半
+                for (let i = 0; i < totalBuildings; i++) {
+                    const angle = (i * 360 / totalBuildings) * (Math.PI / 180);
+                    const x = Math.cos(angle) * buildingRadius;
+                    const y = Math.sin(angle) * buildingRadius;
+                    const building = document.createElement('div');
+                    building.className = 'building-node';
+                    // 添加发光门窗
+                    const win1 = document.createElement('div');
+                    win1.className = 'building-window';
+                    win1.style.left = '8px';
+                    win1.style.animationDelay = (i * 0.2) + 's';
+                    const win2 = document.createElement('div');
+                    win2.className = 'building-window';
+                    win2.style.right = '8px';
+                    win2.style.animationDelay = (i * 0.2 + 0.3) + 's';
+                    building.appendChild(win1);
+                    building.appendChild(win2);
+                    building.style.transform = `translate(${x}px, ${y}px) rotate(${i * 360 / totalBuildings + 90}deg)`;
+                    buildingRing.appendChild(building);
+                }
+            }
+
+            // 2. 动态生成外圈的人物节点与汉字（交替排列）
+            const outerRing = document.getElementById('outerRing');
+            if (outerRing) {
+                const outerRadius = 220; // 440px 宽度的一半
+                const nodesData = [
+                    { type: 'avatar', label: '形', desc: '古城格局，空间载体。', dim: 'shape' },
+                    { type: 'text', label: '形' },
+                    { type: 'avatar', label: '技', desc: '营造技艺，匠心智慧。', dim: 'tech' },
+                    { type: 'text', label: '技' },
+                    { type: 'avatar', label: '人', desc: '历史人物，人文底蕴。', dim: 'people' },
+                    { type: 'text', label: '人' },
+                    { type: 'avatar', label: '形', desc: '城池形制，街巷肌理。', dim: 'shape' },
+                    { type: 'text', label: '形' },
+                    { type: 'avatar', label: '技', desc: '榫卯工艺，雕刻技法。', dim: 'tech' },
+                    { type: 'text', label: '技' },
+                    { type: 'avatar', label: '人', desc: '名臣谪贤，商旅百姓。', dim: 'people' },
+                    { type: 'text', label: '人' }
+                ];
+                nodesData.forEach((data, i) => {
+                    const angle = (i * 360 / nodesData.length) * (Math.PI / 180);
+                    const x = Math.cos(angle) * outerRadius;
+                    const y = Math.sin(angle) * outerRadius;
+                    const node = document.createElement('div');
+                    if (data.type === 'avatar') {
+                        node.className = 'avatar-node';
+                        node.setAttribute('data-dimension', data.dim);
+                        const colors = { shape: '#8B4513', tech: '#D2691E', people: '#CD853F' };
+                        const glowColors = { shape: 'rgba(139, 69, 19, 0.5)', tech: 'rgba(210, 105, 30, 0.5)', people: 'rgba(205, 133, 63, 0.5)' };
+                        node.innerHTML = `
+                            <div class="avatar-glow" style="background: ${glowColors[data.dim]}"></div>
+                            <div class="avatar-ring" style="border-color: ${colors[data.dim]}"></div>
+                            <div class="inner-char">${data.label}</div>
+                        `;
+                        node.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            // 触发对应的维度激活
+                            if (typeof State !== 'undefined') {
+                                if (State.activeDimensions.has(data.dim)) {
+                                    State.deactivateDimension(data.dim);
+                                } else {
+                                    State.activateDimension(data.dim);
+                                    if (typeof updateExplanation === 'function') updateExplanation(data.dim);
+                                }
+                            }
+                        });
+                    } else {
+                        node.className = 'text-node';
+                        node.innerText = data.label;
+                    }
+                    node.style.transform = `translate(${x}px, ${y}px)`;
+                    outerRing.appendChild(node);
+                });
+            }
+
+            // 3. 动态生成圆环轨道粒子
+            function createRingParticles(containerId, radius, count, color, sizeMin, sizeMax, durationMin, durationMax) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                for (let i = 0; i < count; i++) {
+                    const angle = (i / count) * Math.PI * 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    const particle = document.createElement('div');
+                    particle.className = 'ring-particle';
+                    const size = sizeMin + Math.random() * (sizeMax - sizeMin);
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.background = color;
+                    particle.style.left = 'calc(50% - ' + (size / 2) + 'px)';
+                    particle.style.top = 'calc(50% - ' + (size / 2) + 'px)';
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                    particle.style.animationDelay = (Math.random() * durationMax) + 's';
+                    particle.style.animationDuration = (durationMin + Math.random() * (durationMax - durationMin)) + 's';
+                    container.appendChild(particle);
+                }
+            }
+
+            createRingParticles('ringParticlesMiddle', 140, 24, 'rgba(255, 215, 0, 0.7)', 2, 5, 2, 4);
+            createRingParticles('ringParticlesOuter', 220, 40, 'rgba(255, 200, 100, 0.5)', 1, 3, 3, 6);
+
+            // 4. 动态生成背景氛围粒子
+            const particleBg = document.getElementById('particle-bg');
+            if (particleBg) {
+                const bgCount = 60;
+                for (let i = 0; i < bgCount; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'bg-particle';
+                    const size = 1 + Math.random() * 3;
+                    p.style.width = size + 'px';
+                    p.style.height = size + 'px';
+                    p.style.left = (Math.random() * 100) + '%';
+                    p.style.top = (Math.random() * 100) + '%';
+                    p.style.animationDelay = (Math.random() * 8) + 's';
+                    p.style.animationDuration = (4 + Math.random() * 6) + 's';
+                    const colors = [
+                        'rgba(255, 215, 0, 0.6)',
+                        'rgba(255, 180, 60, 0.5)',
+                        'rgba(201, 169, 97, 0.4)',
+                        'rgba(255, 220, 130, 0.5)'
+                    ];
+                    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    particleBg.appendChild(p);
+                }
+            }
+
+            // 5. 魂字周围上升光点
+            const soulFloatContainer = document.getElementById('soulFloatParticles');
+            if (soulFloatContainer) {
+                for (let i = 0; i < 20; i++) {
+                    const fp = document.createElement('div');
+                    fp.className = 'soul-float-particle';
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 30 + Math.random() * 50;
+                    fp.style.left = (50 + Math.cos(angle) * dist / 5) + '%';
+                    fp.style.top = (50 + Math.sin(angle) * dist / 5) + '%';
+                    fp.style.animationDelay = (Math.random() * 3) + 's';
+                    fp.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    soulFloatContainer.appendChild(fp);
+                }
+            }
+
+            // 6. 能量波纹
+            const rippleContainer = document.getElementById('energyRipples');
+            if (rippleContainer) {
+                for (let i = 0; i < 3; i++) {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'energy-ripple';
+                    ripple.style.animationDelay = (i * 1.5) + 's';
+                    rippleContainer.appendChild(ripple);
+                }
+            }
+
+            // 7. 法阵底座符文
+            const baseContainer = document.getElementById('magicBase');
+            if (baseContainer) {
+                const runes = ['形', '技', '人', '魂', '道', '韵', '气', '脉'];
+                const runeRadius = 180;
+                runes.forEach((rune, i) => {
+                    const angle = (i / runes.length) * Math.PI * 2 - Math.PI / 2;
+                    const rx = Math.cos(angle) * runeRadius;
+                    const ry = Math.sin(angle) * runeRadius;
+                    const runeEl = document.createElement('div');
+                    runeEl.className = 'base-rune';
+                    runeEl.innerText = rune;
+                    runeEl.style.transform = `translate(${rx}px, ${ry}px) rotateX(-45deg)`;
+                    runeEl.style.animationDelay = (i * 0.3) + 's';
+                    baseContainer.appendChild(runeEl);
+                });
+            }
+
+            // ===== 全新交互系统 =====
+            initMagicInteractions();
+        })();
+
+        // 鼠标跟随3D倾斜 + 点击爆发 + 拖拽旋转 + 能量牵引
+        function initMagicInteractions() {
+            const container = document.getElementById('magicCircleContainer');
+            const circle = document.getElementById('magicCircle');
+            const burstLayer = document.getElementById('clickBurstLayer');
+            const flashLayer = document.getElementById('screenFlash');
+            const tetherSvg = document.getElementById('tetherSvg');
+            if (!container || !circle) return;
+
+            // 1. 鼠标跟随3D倾斜视差
+            let mouseX = 0, mouseY = 0;
+            let targetRotateX = 45, targetRotateY = 0;
+            let currentRotateX = 45, currentRotateY = 0;
+
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                mouseX = (e.clientX - cx) / (rect.width / 2);
+                mouseY = (e.clientY - cy) / (rect.height / 2);
+                targetRotateY = mouseX * 15;
+                targetRotateX = 45 - mouseY * 10;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                targetRotateX = 45;
+                targetRotateY = 0;
+            });
+
+            function animateTilt() {
+                currentRotateX += (targetRotateX - currentRotateX) * 0.08;
+                currentRotateY += (targetRotateY - currentRotateY) * 0.08;
+                circle.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+                requestAnimationFrame(animateTilt);
+            }
+            animateTilt();
+
+            // 2. 点击爆发粒子
+            container.addEventListener('click', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                createBurstParticles(x, y);
+            });
+
+            function createBurstParticles(x, y) {
+                const colors = ['#ffd700', '#ffae00', '#ff6b35', '#ffcc00', '#ffb300', '#ffffff'];
+                for (let i = 0; i < 24; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'burst-particle';
+                    const angle = (Math.PI * 2 * i) / 24 + Math.random() * 0.3;
+                    const dist = 40 + Math.random() * 80;
+                    const tx = Math.cos(angle) * dist;
+                    const ty = Math.sin(angle) * dist;
+                    const size = 3 + Math.random() * 5;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    p.style.cssText = `
+                        position: absolute;
+                        left: ${x}px;
+                        top: ${y}px;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background: ${color};
+                        border-radius: 50%;
+                        box-shadow: 0 0 ${size * 2}px ${color};
+                        pointer-events: none;
+                        z-index: 100;
+                        --tx: ${tx}px;
+                        --ty: ${ty}px;
+                        animation: burstFly 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+                    `;
+                    burstLayer.appendChild(p);
+                    setTimeout(() => p.remove(), 800);
+                }
+            }
+
+            // 3. 拖拽旋转法阵
+            let isDragging = false;
+            let startAngle = 0;
+            let currentRotation = 0;
+            let autoRotate = true;
+
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                autoRotate = false;
+                const rect = container.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) - currentRotation;
+                container.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = container.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+                currentRotation = angle - startAngle;
+                circle.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) rotateZ(${currentRotation * (180 / Math.PI)}deg)`;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    autoRotate = true;
+                    container.style.cursor = 'grab';
+                }
+            });
+
+            container.style.cursor = 'grab';
+
+            // 4. 能量牵引线 - 魂字与激活节点的动态连线
+            function updateTetherLines() {
+                if (!tetherSvg) return;
+                tetherSvg.innerHTML = `
+                    <defs>
+                        <linearGradient id="tether-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:rgba(255,215,0,0.9)"/>
+                            <stop offset="100%" style="stop-color:rgba(255,215,0,0)"/>
+                        </linearGradient>
+                    </defs>
+                `;
+
+                const soul = document.querySelector('.center-soul');
+                if (!soul) return;
+                const soulRect = soul.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                const sx = soulRect.left - containerRect.left + soulRect.width / 2;
+                const sy = soulRect.top - containerRect.top + soulRect.height / 2;
+
+                document.querySelectorAll('.avatar-node.active, .building-node.active').forEach(node => {
+                    const nRect = node.getBoundingClientRect();
+                    const nx = nRect.left - containerRect.left + nRect.width / 2;
+                    const ny = nRect.top - containerRect.top + nRect.height / 2;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', sx);
+                    line.setAttribute('y1', sy);
+                    line.setAttribute('x2', nx);
+                    line.setAttribute('y2', ny);
+                    line.setAttribute('stroke', 'url(#tether-gradient)');
+                    line.setAttribute('stroke-width', '1.5');
+                    line.setAttribute('stroke-dasharray', '4 6');
+                    line.setAttribute('opacity', '0.6');
+                    line.style.animation = 'tetherFlow 1s linear infinite';
+                    tetherSvg.appendChild(line);
+                });
+            }
+
+            // 监听维度激活状态变化，更新牵引线
+            const originalActivate = State.activateDimension;
+            const originalDeactivate = State.deactivateDimension;
+
+            State.activateDimension = function(dim) {
+                originalActivate.call(this, dim);
+                showScreenFlash();
+                setTimeout(updateTetherLines, 100);
+            };
+
+            State.deactivateDimension = function(dim) {
+                originalDeactivate.call(this, dim);
+                setTimeout(updateTetherLines, 100);
+            };
+
+            // 5. 全屏光效反馈
+            function showScreenFlash() {
+                if (!flashLayer) return;
+                flashLayer.style.animation = 'none';
+                flashLayer.offsetHeight;
+                flashLayer.style.animation = 'screenFlash 0.6s ease-out forwards';
+            }
+
+            // 6. 音频可视化脉动（模拟）
+            let audioPulse = 0;
+            function simulateAudioPulse() {
+                audioPulse += 0.05;
+                const intensity = (Math.sin(audioPulse) + 1) / 2;
+                const soul = document.querySelector('.center-soul');
+                if (soul) {
+                    const baseScale = 1 + intensity * 0.05;
+                    soul.style.setProperty('--audio-scale', baseScale);
+                }
+                requestAnimationFrame(simulateAudioPulse);
+            }
+            simulateAudioPulse();
+        }
+
+        // ===== 更多天马行空交互效果 =====
+        (function initExtraInteractions() {
+
+                // === 1. 鼠标拖尾粒子（仅在法阵区域） ===
+                const container = document.getElementById('magicCircleContainer');
+                if (container) {
+                    let lastTrail = 0;
+                    container.addEventListener('mousemove', (e) => {
+                        const now = Date.now();
+                        if (now - lastTrail < 40) return;
+                        lastTrail = now;
+
+                        const p = document.createElement('div');
+                        p.className = 'trail-particle';
+                        const colors = ['#ffd700', '#ffae00', '#ffcc00', '#fff5c0'];
+                        p.style.left = e.clientX + 'px';
+                        p.style.top = e.clientY + 'px';
+                        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        p.style.boxShadow = `0 0 8px ${p.style.background}`;
+                        document.body.appendChild(p);
+                        setTimeout(() => p.remove(), 1000);
+                    });
+                }
+
+                // === 2. 全局点击水波纹 ===
+                document.addEventListener('click', (e) => {
+                    const r = document.createElement('div');
+                    r.className = 'water-ripple';
+                    r.style.left = (e.clientX - 100) + 'px';
+                    r.style.top = (e.clientY - 100) + 'px';
+                    document.body.appendChild(r);
+                    setTimeout(() => r.remove(), 1000);
+                });
+
+                // === 3. 诗词行魔法悬停 ===
+                document.querySelectorAll('.poem-line').forEach((line) => {
+                    line.addEventListener('mouseenter', () => { line.classList.add('magic-active'); });
+                    line.addEventListener('mouseleave', () => { line.classList.remove('magic-active'); });
+                });
+
+                // === 4. 卡片磁吸悬停 ===
+                document.querySelectorAll('.module-card').forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        card.style.transform = `translateY(-4px) translate(${x * 0.08}px, ${y * 0.06}px)`;
+                        card.classList.add('magnetic-hover');
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = '';
+                        card.classList.remove('magnetic-hover');
+                    });
+                });
+
+                // === 5. 结尾文字打字机效果 ===
+                const epilogueText = document.querySelector('.epilogue-text');
+                if (epilogueText && !epilogueText.dataset.typewritten) {
+                    epilogueText.dataset.typewritten = 'true';
+                    const originalText = epilogueText.textContent;
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && entry.target.dataset.typewritten === 'true') {
+                                entry.target.dataset.typewritten = 'animating';
+                                typeWriter(entry.target, originalText);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+                    observer.observe(epilogueText);
+
+                    function typeWriter(el, text) {
+                        el.innerHTML = '';
+                        let i = 0;
+                        const cursor = document.createElement('span');
+                        cursor.className = 'typewriter-cursor';
+                        el.appendChild(cursor);
+
+                        function type() {
+                            if (i < text.length) {
+                                cursor.insertAdjacentHTML('beforebegin', text.charAt(i));
+                                i++;
+                                setTimeout(type, 35 + Math.random() * 25);
+                            } else {
+                                setTimeout(() => cursor.remove(), 2000);
+                            }
+                        }
+                        setTimeout(type, 300);
+                    }
+                }
+
+                // === 6. 滚动视差 ===
+                const parallaxElements = document.querySelectorAll('[data-parallax]');
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    parallaxElements.forEach(el => {
+                        const speed = parseFloat(el.dataset.parallax) || 0.5;
+                        const rect = el.getBoundingClientRect();
+                        const offset = (rect.top + scrollY - window.innerHeight / 2) * speed * 0.05;
+                        el.style.transform = `translateY(${offset}px)`;
+                    });
+                });
+                document.querySelector('.spirit-intro-section')?.setAttribute('data-parallax', '-0.3');
+                document.querySelector('.spirit-center-panel')?.setAttribute('data-parallax', '0.15');
+                document.querySelector('.spirit-epilogue-section')?.setAttribute('data-parallax', '-0.2');
+
+                // === 7. 全局聚光灯跟随鼠标 ===
+                const spotlight = document.createElement('div');
+                spotlight.className = 'spotlight-overlay';
+                document.body.appendChild(spotlight);
+                window.addEventListener('mousemove', (e) => {
+                    spotlight.style.setProperty('--sx', e.clientX + 'px');
+                    spotlight.style.setProperty('--sy', e.clientY + 'px');
+                });
+
+                // === 8. 左侧卡片点击涟漪 ===
+                document.querySelectorAll('.module-card').forEach(function(card) {
+                    card.addEventListener('click', function(e) {
+                        var ripple = document.createElement('span');
+                        ripple.style.cssText = 'position:absolute;border-radius:50%;background:rgba(255,215,0,0.15);transform:scale(0);animation:cardRipple 0.6s ease-out;pointer-events:none;left:' + e.offsetX + 'px;top:' + e.offsetY + 'px;width:200px;height:200px;margin-left:-100px;margin-top:-100px;';
+                        var inner = card.querySelector('.module-card-inner');
+                        if (inner) inner.appendChild(ripple);
+                        setTimeout(function() { ripple.remove(); }, 600);
+                    });
+                });
+            })();
+    </script>
 </body>
 </html>

@@ -70,12 +70,40 @@ const State = {
         this.activeDimensions.add(dim);
         this.updateUI();
 
-        CosmosSystem.addEnergyParticle(dim);
-
         const beam = document.querySelector(`.energy-beam.beam-${dim}`);
-        if (beam) beam.classList.add('active');
+        if (beam) {
+            beam.classList.add('active');
+            this.createBeamParticles(dim);
+        }
 
         this.checkCompletion();
+    },
+
+    createBeamParticles(dim) {
+        const beam = document.querySelector(`.energy-beam.beam-${dim}`);
+        if (!beam) return;
+        const svg = beam.closest('svg');
+        if (!svg) return;
+
+        const x1 = parseFloat(beam.getAttribute('x1'));
+        const y1 = parseFloat(beam.getAttribute('y1'));
+        const x2 = parseFloat(beam.getAttribute('x2'));
+        const y2 = parseFloat(beam.getAttribute('y2'));
+
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const t = Math.random();
+                const px = x1 + (x2 - x1) * t;
+                const py = y1 + (y2 - y1) * t;
+                const particle = document.createElement('div');
+                particle.className = 'beam-particle';
+                particle.style.left = px + 'px';
+                particle.style.top = py + 'px';
+                particle.style.animationDelay = (Math.random() * 0.5) + 's';
+                svg.parentElement.appendChild(particle);
+                setTimeout(() => particle.remove(), 2500);
+            }, i * 400);
+        }
     },
 
     deactivateDimension(dim) {
@@ -485,6 +513,7 @@ function createRipple(element, event) {
 
 // ===== 轨道节点交互 =====
 function initOrbitInteraction() {
+    // 兼容旧版 cosmos-orbit（如有）
     document.querySelectorAll('.cosmos-orbit').forEach(orbit => {
         orbit.addEventListener('click', () => {
             const dim = orbit.dataset.dimension;
@@ -525,7 +554,51 @@ function initOrbitInteraction() {
         });
     });
 
-    const soul = document.querySelector('.cosmos-soul');
+    // 新版 3D 转盘外圈 avatar-node 交互
+    document.querySelectorAll('.avatar-node').forEach(node => {
+        node.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dim = node.dataset.dimension;
+            if (!dim) return;
+            if (State.activeDimensions.has(dim)) {
+                State.deactivateDimension(dim);
+            } else {
+                State.activateDimension(dim);
+                updateExplanation(dim);
+            }
+        });
+
+        node.addEventListener('mouseenter', () => {
+            const dim = node.dataset.dimension;
+            const data = dimensionData[dim];
+            if (data && data.tooltip) {
+                clearTimeout(Tooltip.timeout);
+                Tooltip.element.innerHTML = `
+                    <div class="tooltip-title">${data.name} · ${data.title}</div>
+                    <div>${data.tooltip}</div>
+                `;
+                const rect = node.getBoundingClientRect();
+                const tooltipRect = Tooltip.element.getBoundingClientRect();
+                let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+                let top = rect.top - tooltipRect.height - 12;
+                if (left < 10) left = 10;
+                if (left + tooltipRect.width > window.innerWidth - 10) {
+                    left = window.innerWidth - tooltipRect.width - 10;
+                }
+                if (top < 10) top = rect.bottom + 12;
+                Tooltip.element.style.left = left + 'px';
+                Tooltip.element.style.top = top + 'px';
+                Tooltip.element.classList.add('visible');
+            }
+        });
+
+        node.addEventListener('mouseleave', () => {
+            Tooltip.hide();
+        });
+    });
+
+    // 中央魂字点击交互
+    const soul = document.querySelector('.center-soul');
     if (soul) {
         soul.addEventListener('click', () => {
             if (State.activeDimensions.size < 3) {
@@ -690,7 +763,7 @@ const CelebrationEffect = {
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', () => {
     State.init();
-    CosmosSystem.init();
+    // CosmosSystem.init(); // 3D转盘已替代Canvas星象图
     Tooltip.init();
     initModuleCards();
     initOrbitInteraction();
@@ -700,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Typewriter.init();
     State.updateUI();
 
-    console.log('崖城之魂交互系统已加载 - 宇宙星系版');
+    console.log('崖城之魂交互系统已加载 - 3D转盘法阵版');
 });
 
 // ===== 页面进度条 =====

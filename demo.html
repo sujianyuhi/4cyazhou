@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修真玄幻法阵系统</title>
+    <style>
+        /* 基础样式与暗色背景 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d131a;
+            background-image: radial-gradient(circle at center, #1a2a36 0%, #050a0f 70%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+        }
+
+        /* 主画布/容器，模拟倾斜的3D视角 */
+        .container {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* 旋转的法阵整体 */
+        .magic-circle {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: rotateX(45deg); /* 3D倾斜视角 */
+            transform-style: preserve-3d;
+        }
+
+        /* --- 核心中央：魂 --- */
+        .center-soul {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(255,220,130,0.8) 0%, rgba(230,160,40,0.2) 60%, transparent 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px #ffb300, inset 0 0 30px #ffffff;
+            z-index: 10;
+            animation: pulse 3s infinite ease-in-out;
+            transform: rotateX(-45deg); /* 反向倾斜让文字保持垂直正对观众 */
+        }
+
+        .center-soul .text {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 20px #ffae00, 0 0 10px #ffae00;
+            font-family: "SimSun", "KaiTi", serif;
+        }
+
+        /* --- 中圈：建筑围墙环 --- */
+        .ring-middle {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border: 2px solid rgba(230, 160, 40, 0.4);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(230, 160, 40, 0.2);
+            animation: rotateClockwise 40s linear infinite;
+        }
+
+        /* 模拟中圈上的中国古代建筑节点 */
+        .building-node {
+            position: absolute;
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(to top, #b57c1e, #ffd700);
+            border-radius: 4px;
+            top: calc(50% - 20px);
+            left: calc(50% - 25px);
+            clip-path: polygon(50% 0%, 100% 40%, 85% 40%, 85% 100%, 15% 100%, 15% 40%, 0% 40%); /* 剪裁出一个微型小房子屋顶形状 */
+            box-shadow: 0 0 15px #ffd700;
+            opacity: 0.8;
+        }
+
+        /* --- 外圈：人物与文字环 --- */
+        .ring-outer {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border: 1px dashed rgba(230, 160, 40, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(230,160,40,0.1);
+            animation: rotateCounterClockwise 60s linear infinite;
+            transform-style: preserve-3d;
+        }
+
+        /* 人物头像节点 */
+        .avatar-node {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: #1a2630;
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            top: calc(50% - 35px);
+            left: calc(50% - 35px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 让头像里的文字/图片保持垂直不颠倒 */
+        .avatar-node .inner-char {
+            transform: rotateX(-45deg); 
+            font-size: 1.2rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .avatar-node:hover {
+            box-shadow: 0 0 35px #ffd700;
+            background: #ffd700;
+        }
+        .avatar-node:hover .inner-char {
+            color: #000;
+        }
+
+        /* 环绕文字节点（形、技、艺、人） */
+        .text-node {
+            position: absolute;
+            color: rgba(255, 215, 0, 0.8);
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: "KaiTi", serif;
+            text-shadow: 0 0 10px #ffd700;
+            top: calc(50% - 15px);
+            left: calc(50% - 15px);
+            transform: rotateX(-45deg);
+        }
+
+        /* --- 动画定义 --- */
+        @keyframes pulse {
+            0% { transform: rotateX(-45deg) scale(1); opacity: 0.9; }
+            50% { transform: rotateX(-45deg) scale(1.08); opacity: 1; box-shadow: 0 0 70px #ffae00, inset 0 0 40px #ffffff;}
+            100% { transform: rotateX(-45deg) scale(1); opacity: 0.9; }
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: rotateZ(0deg); }
+            to { transform: rotateZ(360deg); }
+        }
+
+        @keyframes rotateCounterClockwise {
+            from { transform: rotateZ(360deg); }
+            to { transform: rotateZ(0deg); }
+        }
+
+        /* 信息提示框 */
+        .info-panel {
+            position: absolute;
+            bottom: 40px;
+            background: rgba(10, 20, 30, 0.85);
+            border: 1px solid #ffd700;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        .info-panel h3 { margin: 0 0 5px 0; color: #ffd700; }
+        .info-panel p { margin: 0; color: #ccc; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="magic-circle">
+            
+            <div class="center-soul">
+                <div class="text">魂</div>
+            </div>
+
+            <div class="ring-middle" id="buildingRing">
+                </div>
+
+            <div class="ring-outer" id="outerRing">
+                </div>
+
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <h3 id="info-title">天道法阵系统</h3>
+        <p id="info-desc">点击外圈的修真大能节点，探寻其功法与形态秘闻。</p>
+    </div>
+
+    <script>
+        // 1. 动态生成中圈的建筑群（12个节点围成一圈）
+        const buildingRing = document.getElementById('buildingRing');
+        const totalBuildings = 12;
+        const buildingRadius = 225; // 450px 宽度的一半
+
+        for (let i = 0; i < totalBuildings; i++) {
+            const angle = (i * 360 / totalBuildings) * (Math.PI / 180);
+            const x = Math.cos(angle) * buildingRadius;
+            const y = Math.sin(angle) * buildingRadius;
+            
+            const building = document.createElement('div');
+            building.className = 'building-node';
+            // 计算每个建筑在圆环上的绝对坐标
+            building.style.transform = `translate(${x}px, ${y}px) rotate(${i * 360 / totalBuildings + 90}deg)`;
+            buildingRing.appendChild(building);
+        }
+
+        // 2. 动态生成外圈的人物节点与汉字（交替排列）
+        const outerRing = document.getElementById('outerRing');
+        const outerRadius = 350; // 700px 宽度的一半
+        
+        // 模拟原图中的人物角色数据
+        const nodesData = [
+            { type: 'avatar', label: '尊者', desc: '掌控核心天道，灵魂不灭。' },
+            { type: 'text', label: '技' },
+            { type: 'avatar', label: '剑圣', desc: '一剑破万法，形神俱妙。' },
+            { type: 'text', label: '艺' },
+            { type: 'avatar', label: '仙子', desc: '通晓音律造化，演化红尘。' },
+            { type: 'text', label: '形' },
+            { type: 'avatar', label: '丹王', desc: '妙手炼神丹，技冠天下。' },
+            { type: 'text', label: '形' },
+            { type: 'avatar', label: '武皇', desc: '肉身成圣，力破虚空。' },
+            { type: 'text', label: '技' },
+            { type: 'avatar', label: '隐士', desc: '超然世外，不入因果。' },
+            { type: 'text', label: '人' }
+        ];
+
+        nodesData.forEach((data, i) => {
+            const angle = (i * 360 / nodesData.length) * (Math.PI / 180);
+            const x = Math.cos(angle) * outerRadius;
+            const y = Math.sin(angle) * outerRadius;
+
+            const node = document.createElement('div');
+            
+            if (data.type === 'avatar') {
+                node.className = 'avatar-node';
+                node.innerHTML = `<div class="inner-char">${data.label}</div>`;
+                // 绑定点击事件，增强网页互动感
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.getElementById('info-title').innerText = data.label;
+                    document.getElementById('info-desc').innerText = data.desc;
+                });
+            } else {
+                node.className = 'text-node';
+                node.innerText = data.label;
+            }
+
+            // 平移定位
+            node.style.transform = `translate(${x}px, ${y}px)`;
+            outerRing.appendChild(node);
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 class ModelViewer {
     constructor() {
@@ -18,7 +19,7 @@ class ModelViewer {
         if (!this.container) return;
 
         this.init();
-        this.loadModel();
+        this.setupLazyLoad();
         this.bindEvents();
     }
 
@@ -121,26 +122,41 @@ class ModelViewer {
         this.scene.add(gridHelper);
     }
 
+    setupLazyLoad() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.model) {
+                    this.loadModel();
+                    observer.unobserve(this.container);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(this.container);
+    }
+
     loadModel() {
         const loader = new GLTFLoader();
-        const modelPath = 'Model/model1.glb';
+
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        loader.setDRACOLoader(dracoLoader);
+
+        const modelPath = 'Model/model1-draco.glb';
 
         loader.load(
             modelPath,
             (gltf) => {
                 this.model = gltf.scene;
 
-                // 计算模型边界框
                 const box = new THREE.Box3().setFromObject(this.model);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
 
-                // 缩放模型以适应场景
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scale = 4 / maxDim;
                 this.model.scale.setScalar(scale);
 
-                // 重新计算边界并居中
                 this.model.updateMatrixWorld();
                 const newBox = new THREE.Box3().setFromObject(this.model);
                 const newCenter = newBox.getCenter(new THREE.Vector3());
@@ -150,7 +166,6 @@ class ModelViewer {
                 this.model.position.z = -newCenter.z;
                 this.model.position.y = -newBox.min.y;
 
-                // 启用阴影
                 this.model.traverse((child) => {
                     if (child.isMesh) {
                         child.castShadow = true;
@@ -163,17 +178,16 @@ class ModelViewer {
 
                 this.scene.add(this.model);
 
-                // 调整相机目标
                 this.controls.target.set(0, newSize.y * 0.3, 0);
 
-                // 隐藏加载动画
                 if (this.loadingEl) {
                     this.loadingEl.style.display = 'none';
                 }
             },
             (progress) => {
-                // 加载进度
-                const percent = (progress.loaded / progress.total * 100).toFixed(0);
+                const percent = progress.total > 0
+                    ? (progress.loaded / progress.total * 100).toFixed(0)
+                    : '解码中';
                 if (this.loadingEl) {
                     const span = this.loadingEl.querySelector('span');
                     if (span) span.textContent = `模型加载中... ${percent}%`;
