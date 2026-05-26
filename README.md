@@ -22,6 +22,7 @@
 **崖城风骨** 是一款以海南崖州古城建筑文化为主题的数字图鉴 Web 应用。作品采用「从物到魂」四层叙事结构，通过现代化的交互设计，展现崖州古城的历史文化、建筑特色、人文精神和科技智慧。
 
 🌐 **在线访问**: [https://4c2026p1.sujianyu.cn](https://4c2026p1.sujianyu.cn)
+                [https://sujianyuhi.github.io/4cyazhou](sujianyuhi.github.io/4cyazhou/)
 
 ### ✨ 核心特色
 
